@@ -241,6 +241,7 @@ local function buffer_details_21(buf_id)
   return {["buffer-id"] = buf_id, ["buffer-name"] = nvim.buf_get_name(buf_id)}
 end
 _2amodule_2a["buffer-details!"] = buffer_details_21
+--[[ (nvim.buf_get_name 0) ]]--
 local function get_buffers_21()
   return a.map(buffer_details_21, vim.api.nvim_list_bufs())
 end
@@ -272,6 +273,7 @@ local function find_buffer_to_jump_21()
   local findings = first_error_jump(filter_test_outputs(conjure_log_buf_content_21()))
   local failing_namespace = a.get(findings, "namespace")
   local failing_line = a.get(findings, "failed-line")
+  print("mm debug findings ", findings)
   if failing_namespace then
     return a.merge(find_matching_buffer(failing_namespace, get_buffers_21()), findings)
   else
@@ -297,8 +299,7 @@ local function jump_21(buffer_and_line_info)
   local buffer_id = a.get(buffer_and_line_info, "buffer-id")
   local buffer_name = a.get(buffer_and_line_info, "buffer-name")
   local failed_line = a.get(buffer_and_line_info, "failed-line")
-  go_to_line_21(buffer_name, failed_line)
-  return go_to_first_readable_char_21(buffer_id)
+  return go_to_line_21(buffer_name, failed_line)
 end
 _2amodule_2a["jump!"] = jump_21
 --[[ (jump! {:buffer-id 26
@@ -313,6 +314,7 @@ _2amodule_2a["jump!"] = jump_21
  :suite-name "partial-refunds-test"}) ]]--
 local function jump_to_last_failing_test_21()
   local to_jump = find_buffer_to_jump_21()
+  print("mm debug to-jump ", to_jump)
   if to_jump then
     return jump_21(to_jump)
   else

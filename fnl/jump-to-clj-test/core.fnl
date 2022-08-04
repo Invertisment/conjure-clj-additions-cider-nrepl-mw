@@ -1,5 +1,5 @@
 (module jump-to-clj-test.core
-  {;; You can use Lua's regular require or Aniseed's autoload.
+  {;; You can use Lua's kegular require or Aniseed's autoload.
    require {;;xyz some.cool.tool.xyz
             ;; Fennel destructuring syntax works but defeats the point of autoload.
             ;; Because a lookup is instantly invoked which triggers autoload at
@@ -218,6 +218,7 @@
 
 (defn buffer-details! [buf-id]
   {:buffer-id buf-id :buffer-name (nvim.buf_get_name buf-id)})
+(comment (nvim.buf_get_name 0))
 
 (defn get-buffers! []
   (a.map buffer-details! (vim.api.nvim_list_bufs)))
@@ -245,7 +246,7 @@
   (let [findings (first-error-jump (filter-test-outputs (conjure-log-buf-content!)))
         failing-namespace (a.get findings :namespace)
         failing-line (a.get findings :failed-line)]
-    findings
+    (print "mm debug findings " findings)
     (if failing-namespace
       (a.merge (find-matching-buffer failing-namespace (get-buffers!)) findings)
       (when failing-line
@@ -270,7 +271,8 @@
         buffer-name (a.get buffer-and-line-info :buffer-name)
         failed-line (a.get buffer-and-line-info :failed-line)]
     (go-to-line! buffer-name failed-line)
-    (go-to-first-readable-char! buffer-id)))
+    ;;(go-to-first-readable-char! buffer-id)
+    ))
 (comment (jump! {:buffer-id 26
                  :buffer-name "/home/martin/.config/nvim/fnl/narrower/core/core_test.clj"
                  :failed-line 10
@@ -284,6 +286,7 @@
 
 (defn jump-to-last-failing-test! []
   (let [to-jump (find-buffer-to-jump!)]
+    (print "mm debug to-jump " to-jump)
     (if to-jump 
       (jump! to-jump)
       (nvim.echo "No tests to jump to"))))
