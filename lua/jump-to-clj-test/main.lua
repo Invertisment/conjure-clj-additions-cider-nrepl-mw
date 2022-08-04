@@ -14,11 +14,13 @@ local bridge, nvim, str = require("conjure.bridge"), require("conjure.aniseed.nv
 do end (_2amodule_locals_2a)["bridge"] = bridge
 _2amodule_locals_2a["nvim"] = nvim
 _2amodule_locals_2a["str"] = str
-local function bind(mode)
+local function bind_21(mode, keystroke, fn_name, ns, f)
+  nvim.ex.command_(("-range " .. fn_name), bridge["viml->lua"](ns, f, {}))
+  return nvim.buf_set_keymap(0, "n", keystroke, (":" .. fn_name .. "<cr>"), {silent = true, noremap = true})
 end
-_2amodule_2a["bind"] = bind
+_2amodule_2a["bind!"] = bind_21
 local function on_filetype()
-  return nvim.echo("mm on-filetype")
+  return bind_21("n", "<localleader>tf", "JumpToFirstCljTest", "jump-to-clj-test.core", "jump-to-last-failing-test!")
 end
 _2amodule_2a["on-filetype"] = on_filetype
 local function init_mappings_21()

@@ -3,19 +3,19 @@
             str conjure.aniseed.string
             bridge conjure.bridge}})
 
-(defn bind [mode ]
-  )
-
-(defn on-filetype []
-  (nvim.echo "mm on-filetype")
+(defn bind! [mode keystroke fn-name ns f]
+  (nvim.ex.command_
+    (.. "-range " fn-name)
+    (bridge.viml->lua ns f {}))
   (nvim.buf_set_keymap
     0
     "n"
-    "<localleader>tf"
-    (bridge.viml->lua :jump-to-clj-test.main :on-filetype {})
-    {:silent true :noremap true})
-  ;;(buf :n :LogSplit (cfg :log_split) :conjure.log :split)
-  ;;api.nvim_buf_set_keymap(0, "n", "<locallleader>tf", "lua show_diagnostics_details()", opts)
+    keystroke
+    (.. ":" fn-name "<cr>")
+    {:silent true :noremap true}))
+
+(defn on-filetype []
+  (bind! "n" "<localleader>tf" :JumpToFirstCljTest :jump-to-clj-test.core :jump-to-last-failing-test!)
   )
 
 (defn init-mappings! []
