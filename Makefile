@@ -9,10 +9,10 @@ compile:
 	rm -rf lua
 
 	# Remove this if you only want Aniseed at compile time.
-	deps/aniseed/scripts/embed.sh aniseed jump-to-clj-test
+	deps/aniseed/scripts/embed.sh aniseed jump-to-cljtest
 
 	# Also remove this embed prefix if you're not using Aniseed inside your plugin at runtime.
-	ANISEED_EMBED_PREFIX=jump-to-clj-test deps/aniseed/scripts/compile.sh
+	ANISEED_EMBED_PREFIX=jump-to-cljtest deps/aniseed/scripts/compile.sh
 
 test:
 	rm -rf test/lua

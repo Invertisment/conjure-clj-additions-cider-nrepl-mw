@@ -1,42 +1,11 @@
-(module jump-to-clj-test.core
-  {;; You can use Lua's kegular require or Aniseed's autoload.
-   require {;;xyz some.cool.tool.xyz
-            ;; Fennel destructuring syntax works but defeats the point of autoload.
-            ;; Because a lookup is instantly invoked which triggers autoload at
-            ;; module load time instead of when you need it in your code.
-            ;;{: some-fn} some-module
- ;           const narrower.const
-            }
-
-   ;; Autoload lazily loads the module when you try to use the module methods or values at runtime.
-   autoload {
-             ;;a aniseed.core
-;;             n narrower.ns_filter
-             nvim conjure.aniseed.nvim
-             str conjure.aniseed.string
-             client conjure.client
-             fennel fennel
-             buffer conjure.buffer
-             a aniseed.core
-             editor conjure.editor
-             ;; Shorthand syntax for requiring under the same name.
-             ;;: packer
-             }})
-
-;;(defn set-clojure-mode! [buffer-name]
-;;  (nvim.ex.augroup :conjure_school_filetype)
-;;  (nvim.ex.autocmd_)
-;;  (nvim.ex.autocmd (string.format "BufNewFile,BufRead %s setlocal filetype=clojure" buffer-name))
-;;  (nvim.ex.augroup :END))
-;;
-;;(defn start-buffer! []
-;;  (set-clojure-mode! const.buf-name)
-;;  (nvim.ex.edit const.buf-name))
-;;(comment (start-buffer!))
-;;
-;;(defn shake! []
-;;  (nvim.ex.edit const.buf-name))
-;;(comment (shake!))
+(module jump-to-cljtest.core
+  { autoload {nvim conjure.aniseed.nvim
+              str conjure.aniseed.string
+              client conjure.client
+              fennel fennel
+              buffer conjure.buffer
+              a aniseed.core
+              editor conjure.editor }})
 
 (defn execution-separator? [line]
   (string.match line "; [-]+"))
@@ -285,15 +254,15 @@
     ;;(go-to-first-readable-char! buffer-id)
     ))
 (comment (jump! {:buffer-id 26
-                 :buffer-name "/home/martin/.config/nvim/fnl/narrower/core/core_test.clj"
+                 :buffer-name "/home/user/.config/nvim/fnl/_/core/core_test.clj"
                  :failed-line 10
                  :namespace "core.core-test"
-                 :suite-name "partial-refunds-test"}))
+                 :suite-name "my-failing-testsuite"}))
 (comment (jump! {:buffer-id 1
-                 :buffer-name "/home/martin/.config/nvim/fnl/narrower/core.fnl"
+                 :buffer-name "/home/user/.config/nvim/fnl/_/core.fnl"
                  :failed-line 270
                  :namespace "core.core-test"
-                 :suite-name "partial-refunds-test"}))
+                 :suite-name "my-failing-testsuite"}))
 
 (defn jump-to-last-failing-test! []
   (let [to-jump (find-buffer-to-jump!)]

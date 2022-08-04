@@ -1,3 +1,3 @@
 if has("nvim")
-  lua require("jump-to-clj-test.main").init()
+  lua require("jump-to-cljtest.main").init()
 endif

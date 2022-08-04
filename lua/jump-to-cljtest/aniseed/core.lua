@@ -1,5 +1,5 @@
 local _2afile_2a = "fnl/aniseed/core.fnl"
-local _2amodule_name_2a = "jump-to-clj-test.aniseed.core"
+local _2amodule_name_2a = "jump-to-cljtest.aniseed.core"
 local _2amodule_2a
 do
   package.loaded[_2amodule_name_2a] = {}
@@ -10,8 +10,8 @@ do
   _2amodule_2a["aniseed/locals"] = {}
   _2amodule_locals_2a = (_2amodule_2a)["aniseed/locals"]
 end
-local autoload = (require("jump-to-clj-test.aniseed.autoload")).autoload
-local view = autoload("jump-to-clj-test.aniseed.view")
+local autoload = (require("jump-to-cljtest.aniseed.autoload")).autoload
+local view = autoload("jump-to-cljtest.aniseed.view")
 do end (_2amodule_locals_2a)["view"] = view
 math.randomseed(os.time())
 local function rand(n)

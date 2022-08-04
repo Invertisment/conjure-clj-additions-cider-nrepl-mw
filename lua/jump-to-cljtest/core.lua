@@ -1,5 +1,5 @@
-local _2afile_2a = "fnl/jump-to-clj-test/core.fnl"
-local _2amodule_name_2a = "jump-to-clj-test.core"
+local _2afile_2a = "fnl/jump-to-cljtest/core.fnl"
+local _2amodule_name_2a = "jump-to-cljtest.core"
 local _2amodule_2a
 do
   package.loaded[_2amodule_name_2a] = {}
@@ -10,8 +10,8 @@ do
   _2amodule_2a["aniseed/locals"] = {}
   _2amodule_locals_2a = (_2amodule_2a)["aniseed/locals"]
 end
-local autoload = (require("jump-to-clj-test.aniseed.autoload")).autoload
-local a, buffer, client, editor, fennel, nvim, str = autoload("jump-to-clj-test.aniseed.core"), autoload("conjure.buffer"), autoload("conjure.client"), autoload("conjure.editor"), autoload("fennel"), autoload("conjure.aniseed.nvim"), autoload("conjure.aniseed.string")
+local autoload = (require("jump-to-cljtest.aniseed.autoload")).autoload
+local a, buffer, client, editor, fennel, nvim, str = autoload("jump-to-cljtest.aniseed.core"), autoload("conjure.buffer"), autoload("conjure.client"), autoload("conjure.editor"), autoload("fennel"), autoload("conjure.aniseed.nvim"), autoload("conjure.aniseed.string")
 do end (_2amodule_locals_2a)["a"] = a
 _2amodule_locals_2a["buffer"] = buffer
 _2amodule_locals_2a["client"] = client
@@ -312,15 +312,15 @@ local function jump_21(buffer_and_line_info)
 end
 _2amodule_2a["jump!"] = jump_21
 --[[ (jump! {:buffer-id 26
- :buffer-name "/home/martin/.config/nvim/fnl/narrower/core/core_test.clj"
+ :buffer-name "/home/user/.config/nvim/fnl/_/core/core_test.clj"
  :failed-line 10
  :namespace "core.core-test"
- :suite-name "partial-refunds-test"}) ]]--
+ :suite-name "my-failing-testsuite"}) ]]--
 --[[ (jump! {:buffer-id 1
- :buffer-name "/home/martin/.config/nvim/fnl/narrower/core.fnl"
+ :buffer-name "/home/user/.config/nvim/fnl/_/core.fnl"
  :failed-line 270
  :namespace "core.core-test"
- :suite-name "partial-refunds-test"}) ]]--
+ :suite-name "my-failing-testsuite"}) ]]--
 local function jump_to_last_failing_test_21()
   local to_jump = find_buffer_to_jump_21()
   if to_jump then

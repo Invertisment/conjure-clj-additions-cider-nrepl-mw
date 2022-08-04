@@ -1,4 +1,4 @@
-(module jump-to-clj-test.main
+(module jump-to-cljtest.main
   {require {nvim conjure.aniseed.nvim
             str conjure.aniseed.string
             bridge conjure.bridge}})
@@ -15,7 +15,7 @@
     {:silent true :noremap true}))
 
 (defn on-filetype []
-  (bind! "n" "<localleader>tf" :JumpToFirstCljTest :jump-to-clj-test.core :jump-to-last-failing-test!)
+  (bind! "n" "<localleader>tf" :JumpToFirstCljTest :jump-to-cljtest.core :jump-to-last-failing-test!)
   )
 
 (defn init-mappings! []
@@ -23,7 +23,7 @@
   (nvim.ex.autocmd_)
   (nvim.ex.autocmd
     :FileType (str.join "," [:clojure])
-    (bridge.viml->lua :jump-to-clj-test.main :on-filetype {}))
+    (bridge.viml->lua :jump-to-cljtest.main :on-filetype {}))
   (nvim.ex.augroup :END)
   )
 

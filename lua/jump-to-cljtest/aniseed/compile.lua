@@ -1,5 +1,5 @@
 local _2afile_2a = "fnl/aniseed/compile.fnl"
-local _2amodule_name_2a = "jump-to-clj-test.aniseed.compile"
+local _2amodule_name_2a = "jump-to-cljtest.aniseed.compile"
 local _2amodule_2a
 do
   package.loaded[_2amodule_name_2a] = {}
@@ -10,14 +10,14 @@ do
   _2amodule_2a["aniseed/locals"] = {}
   _2amodule_locals_2a = (_2amodule_2a)["aniseed/locals"]
 end
-local autoload = (require("jump-to-clj-test.aniseed.autoload")).autoload
-local a, fennel, fs, nvim = autoload("jump-to-clj-test.aniseed.core"), autoload("jump-to-clj-test.aniseed.fennel"), autoload("jump-to-clj-test.aniseed.fs"), autoload("jump-to-clj-test.aniseed.nvim")
+local autoload = (require("jump-to-cljtest.aniseed.autoload")).autoload
+local a, fennel, fs, nvim = autoload("jump-to-cljtest.aniseed.core"), autoload("jump-to-cljtest.aniseed.fennel"), autoload("jump-to-cljtest.aniseed.fs"), autoload("jump-to-cljtest.aniseed.nvim")
 do end (_2amodule_locals_2a)["a"] = a
 _2amodule_locals_2a["fennel"] = fennel
 _2amodule_locals_2a["fs"] = fs
 _2amodule_locals_2a["nvim"] = nvim
 local function wrap_macros(code, opts)
-  local macros_module = "jump-to-clj-test.aniseed.macros"
+  local macros_module = "jump-to-cljtest.aniseed.macros"
   local filename
   do
     local _1_ = a.get(opts, "filename")
