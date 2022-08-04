@@ -43,7 +43,7 @@ _2amodule_2a["run-ns-tests-find-ns"] = run_ns_tests_find_ns
 --[[ (run-ns-tests-find-ns "; hi: partial-test
 ") ]]--
 local function run_current_test_find_suite_name(failure_line)
-  local found_suite_name = string.match(failure_line, "; FAIL in [(]([^ ]+)[)].*")
+  local found_suite_name = (string.match(failure_line, "; FAIL in [(]([^ ]+)[)].*") or string.match(failure_line, "; ERROR in [(]([^ ]+)[)].*"))
   local function _2_()
     if found_suite_name then
       return {["suite-name"] = found_suite_name}
@@ -56,8 +56,10 @@ end
 _2amodule_2a["run-current-test-find-suite-name"] = run_current_test_find_suite_name
 --[[ (run-current-test-find-suite-name "; FAIL in (my-test) (form-init3584826820959655573.clj:1664)
 ") ]]--
+--[[ (run-current-test-find-suite-name "; ERROR in (my-test) (form-init3584826820959655573.clj:1664)
+") ]]--
 local function failure_file_line(failure_line)
-  local found_line = tonumber(string.match(failure_line, "; FAIL in [^ ]+ [^:]+:([0-9]+)"))
+  local found_line = tonumber((string.match(failure_line, "; FAIL in [^ ]+ [^:]+:([0-9]+)") or string.match(failure_line, "; ERROR in [^ ]+ [^:]+:([0-9]+)")))
   if found_line then
     return {["failed-line"] = found_line}
   else
@@ -68,6 +70,8 @@ _2amodule_2a["failure-file-line"] = failure_file_line
 --[[ (failure-file-line "; FAIL in (my-test) (form-init3584826820959655573.clj:1664)
 ") ]]--
 --[[ (failure-file-line "; FAIL in (my-test) (form-init3584826820959655573.clj)
+") ]]--
+--[[ (failure-file-line "; ERROR in (my-test) (form-init3584826820959655573.clj:1664)
 ") ]]--
 local function str_replace(txt, find, replacement)
   local _5_ = string.gsub(txt, find, replacement)
@@ -106,20 +110,6 @@ _2amodule_2a["drop-until-match"] = drop_until_match
 " "aa{" 2) ]]--
 --[[ (drop-until-match ";; aa{:res :ok :id 1}
 " "aa{" 1) ]]--
-local function parse_test_summary(line)
-  local parsed = parse_obj(line)
-  if ("summary" == a.get(parsed, "type")) then
-    return parsed
-  else
-    return nil
-  end
-end
-_2amodule_2a["parse-test-summary"] = parse_test_summary
---[[ (parse-test-summary "{:test 6, :pass 19, :fail 0, :error 0, :type :summary}
-") ]]--
---[[ (parse-test-summary "{:test 6, :pass 19, :fail 0, :error 0, :type :not-summary}
-") ]]--
---[[ (parse-test-summary "hi") ]]--
 local function conjure_log_buf_name()
   return str.join({"conjure-log-", nvim.fn.getpid(), client.get("buf-suffix")})
 end
@@ -136,7 +126,7 @@ _2amodule_2a["empty?"] = empty_3f
 --[[ (empty? ["hi"]) ]]--
 local function chunk_by_header(f, li)
   local out
-  local function _9_(out0, item)
+  local function _8_(out0, item)
     local current_group = a.get(out0, "current-group")
     local output = a.get(out0, "output")
     if f(item) then
@@ -150,7 +140,7 @@ local function chunk_by_header(f, li)
       return out0
     end
   end
-  out = a.reduce(_9_, {output = {}, ["current-group"] = {}}, li)
+  out = a.reduce(_8_, {output = {}, ["current-group"] = {}}, li)
   if empty_3f(a.get(out, "current-group")) then
     return a.get(out, "output")
   else
@@ -164,10 +154,10 @@ _2amodule_2a["chunk-by-header"] = chunk_by_header
 --[[ (chunk-by-header (fn [item] (= item 2)) [2 3 2 5]) ]]--
 --[[ (chunk-by-header (fn [item] (= item 2)) [2 2]) ]]--
 local function to_chunks(lines)
-  local function _13_(_241)
+  local function _12_(_241)
     return execution_separator_3f(_241)
   end
-  return chunk_by_header(_13_, lines)
+  return chunk_by_header(_12_, lines)
 end
 _2amodule_2a["to-chunks"] = to_chunks
 local function conjure_log_buf_content_21()
@@ -182,6 +172,7 @@ _2amodule_2a["filter-test-outputs"] = filter_test_outputs
 --[[ (filter-test-outputs (conjure-log-buf-content!)) ]]--
 --[[ (def single-testsuite ["; --------------------------------------------------------------------------------"
  "; run-current-test: testsuite-test"
+ "; FAIL in (partial-refunds-test) (form-init2746081655060792820.clj:100)"
  "; --------------------------------------------------------------------------------"
  "; run-current-test: testsuite-test"
  ";"
@@ -195,6 +186,8 @@ _2amodule_2a["filter-test-outputs"] = filter_test_outputs
  ";"
  "; Testing core.core-test"
  ";"
+ "; FAIL in (partial-refunds-test) (form-init2746081655060792820.clj:100)"
+ "; FAIL in (partial-refunds-test) (form-init2746081655060792820.clj:189)"
  "; FAIL in (partial-refunds-test) (form-init2746081655060792820.clj:1664)"
  ";"
  "; Ran 6 tests containing 19 assertions."
@@ -219,17 +212,25 @@ _2amodule_2a["filter-test-outputs"] = filter_test_outputs
 --[[ (filter-test-outputs single-testsuite) ]]--
 --[[ (filter-test-outputs namespace-testsuite) ]]--
 --[[ (filter-test-outputs ok-testsuite) ]]--
+--[[ (filter-test-outputs (a.concat namespace-testsuite ok-testsuite)) ]]--
+local function reduce_reverse(f, init, xs)
+  local function _13_(a0, b)
+    return f(b, a0)
+  end
+  return a.reduce(_13_, init, xs)
+end
+_2amodule_2a["reduce-reverse"] = reduce_reverse
 local function first_error_jump(test_result_chunk)
   local output
   local function _14_(line)
     if ("string" == type(line)) then
       local failure_line_details = failure_file_line(line)
-      return a.merge(run_current_test_find_suite_name(line), run_ns_tests_find_ns(line), failure_line_details)
+      return a.merge({}, run_current_test_find_suite_name(line), run_ns_tests_find_ns(line), failure_line_details)
     else
       return nil
     end
   end
-  output = a.reduce(a.merge, {}, a.map(_14_, test_result_chunk))
+  output = reduce_reverse(a.merge, {}, a.map(_14_, test_result_chunk))
   if a.get(output, "failed-line") then
     return output
   else
@@ -240,7 +241,6 @@ _2amodule_2a["first-error-jump"] = first_error_jump
 --[[ (first-error-jump (filter-test-outputs namespace-testsuite)) ]]--
 --[[ (first-error-jump (filter-test-outputs single-testsuite)) ]]--
 --[[ (first-error-jump (filter-test-outputs (conjure-log-buf-content!))) ]]--
---[[ (first-error-jump (filter-test-outputs ok-testsuite)) ]]--
 local function ns__3efilename(ns_name)
   return (string.gsub(string.gsub(ns_name, "-", "_"), "[.]", "/") .. ".clj")
 end

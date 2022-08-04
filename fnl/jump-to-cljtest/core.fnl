@@ -24,20 +24,22 @@
 
 (defn run-current-test-find-suite-name [failure-line]
   ; run-current-test: partial-test
-  (let [found-suite-name (-> failure-line
-                             (string.match "; FAIL in [(]([^ ]+)[)].*")) ]
+  (let [found-suite-name (or (string.match failure-line  "; FAIL in [(]([^ ]+)[)].*")
+                             (string.match failure-line "; ERROR in [(]([^ ]+)[)].*")) ]
     (or (when found-suite-name
           {:suite-name found-suite-name}))))
 (comment (run-current-test-find-suite-name "; FAIL in (my-test) (form-init3584826820959655573.clj:1664)\n"))
+(comment (run-current-test-find-suite-name "; ERROR in (my-test) (form-init3584826820959655573.clj:1664)\n"))
 
 (defn failure-file-line [failure-line]
-  (let [found-line (-> failure-line
-                       (string.match "; FAIL in [^ ]+ [^:]+:([0-9]+)")
+  (let [found-line (-> (or (string.match failure-line  "; FAIL in [^ ]+ [^:]+:([0-9]+)")
+                           (string.match failure-line "; ERROR in [^ ]+ [^:]+:([0-9]+)"))
                        tonumber)]
     (when found-line
       {:failed-line found-line})))
 (comment (failure-file-line "; FAIL in (my-test) (form-init3584826820959655573.clj:1664)\n"))
 (comment (failure-file-line "; FAIL in (my-test) (form-init3584826820959655573.clj)\n"))
+(comment (failure-file-line "; ERROR in (my-test) (form-init3584826820959655573.clj:1664)\n"))
 
 (defn str-replace [txt find replacement]
   (->> (string.gsub txt find replacement)
@@ -65,17 +67,6 @@
       (string.sub s (+ index match-str-drop-len)))))
 (comment (drop-until-match ";; aa{:res :ok :id 1}\n" "aa{" 2))
 (comment (drop-until-match ";; aa{:res :ok :id 1}\n" "aa{" 1))
-
-(defn parse-test-summary [line]
-  ;; {:test 6, :pass 19, :fail 0, :error 0, :type :summary}
-  (let [parsed (-> line
-                   ;;(drop-until-match ";; " 2)
-                   parse-obj)]
-    (when (= :summary (a.get parsed :type))
-      parsed)))
-(comment (parse-test-summary "{:test 6, :pass 19, :fail 0, :error 0, :type :summary}\n"))
-(comment (parse-test-summary "{:test 6, :pass 19, :fail 0, :error 0, :type :not-summary}\n"))
-(comment (parse-test-summary "hi"))
 
 (defn conjure-log-buf-name []
   ;; straight up copied from:
@@ -133,6 +124,7 @@
 (comment (def single-testsuite
            ["; --------------------------------------------------------------------------------"
             "; run-current-test: testsuite-test"
+            "; FAIL in (partial-refunds-test) (form-init2746081655060792820.clj:100)"
             "; --------------------------------------------------------------------------------"
             "; run-current-test: testsuite-test"
             ";"
@@ -147,6 +139,8 @@
             ";"
             "; Testing core.core-test"
             ";"
+            "; FAIL in (partial-refunds-test) (form-init2746081655060792820.clj:100)"
+            "; FAIL in (partial-refunds-test) (form-init2746081655060792820.clj:189)"
             "; FAIL in (partial-refunds-test) (form-init2746081655060792820.clj:1664)"
             ";"
             "; Ran 6 tests containing 19 assertions."
@@ -172,22 +166,26 @@
 (comment (filter-test-outputs single-testsuite))
 (comment (filter-test-outputs namespace-testsuite))
 (comment (filter-test-outputs ok-testsuite))
+(comment (filter-test-outputs (a.concat namespace-testsuite ok-testsuite)))
+
+(defn reduce-reverse [f init xs]
+  (a.reduce (fn [a b] (f b a)) init xs))
 
 (defn first-error-jump [test-result-chunk]
   (let [output (->> test-result-chunk
                     (a.map (fn [line]
-                             (when (= "string" (type line))
-                               (let [failure-line-details (failure-file-line line)]
-                                 (a.merge (run-current-test-find-suite-name line)
-                                          (run-ns-tests-find-ns line)
-                                          failure-line-details)))))
-                    (a.reduce a.merge {}))]
+                             (if (= "string" (type line))
+                                  (let [failure-line-details (failure-file-line line)]
+                                    (a.merge {}
+                                             (run-current-test-find-suite-name line)
+                                             (run-ns-tests-find-ns line)
+                                             failure-line-details)))))
+                    (reduce-reverse a.merge {}))]
     (when (a.get output :failed-line)
       output)))
 (comment (first-error-jump (filter-test-outputs namespace-testsuite)))
 (comment (first-error-jump (filter-test-outputs single-testsuite)))
 (comment (first-error-jump (filter-test-outputs (conjure-log-buf-content!))))
-(comment (first-error-jump (filter-test-outputs ok-testsuite)))
 
 (defn ns->filename [ns-name]
   (-> ns-name
