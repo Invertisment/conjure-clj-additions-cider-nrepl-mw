@@ -170,6 +170,7 @@ local function to_chunks(lines)
 end
 _2amodule_2a["to-chunks"] = to_chunks
 local function conjure_log_buf_content_21()
+  print("mm debug conjure-log-buf-name ", conjure_log_buf_name())
   return vim.api.nvim_buf_get_lines(upsert_buf(conjure_log_buf_name()), 0, -1, true)
 end
 _2amodule_2a["conjure-log-buf-content!"] = conjure_log_buf_content_21
@@ -221,6 +222,7 @@ local function first_error_jump(test_result_chunk)
     end
   end
   output = a.reduce(a.merge, {}, a.map(_17_, test_result_chunk))
+  print("mm debug first-error-jump output ", output)
   if not a["empty?"](output) then
     return output
   else
