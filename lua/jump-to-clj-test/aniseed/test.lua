@@ -1,5 +1,5 @@
 local _2afile_2a = "fnl/aniseed/test.fnl"
-local _2amodule_name_2a = "jump-to-test.aniseed.test"
+local _2amodule_name_2a = "jump-to-clj-test.aniseed.test"
 local _2amodule_2a
 do
   package.loaded[_2amodule_name_2a] = {}
@@ -10,8 +10,8 @@ do
   _2amodule_2a["aniseed/locals"] = {}
   _2amodule_locals_2a = (_2amodule_2a)["aniseed/locals"]
 end
-local autoload = (require("jump-to-test.aniseed.autoload")).autoload
-local a, fs, nvim, str = autoload("jump-to-test.aniseed.core"), autoload("jump-to-test.aniseed.fs"), autoload("jump-to-test.aniseed.nvim"), autoload("jump-to-test.aniseed.string")
+local autoload = (require("jump-to-clj-test.aniseed.autoload")).autoload
+local a, fs, nvim, str = autoload("jump-to-clj-test.aniseed.core"), autoload("jump-to-clj-test.aniseed.fs"), autoload("jump-to-clj-test.aniseed.nvim"), autoload("jump-to-clj-test.aniseed.string")
 do end (_2amodule_locals_2a)["a"] = a
 _2amodule_locals_2a["fs"] = fs
 _2amodule_locals_2a["nvim"] = nvim

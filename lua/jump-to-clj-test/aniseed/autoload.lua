@@ -1,5 +1,5 @@
 local _2afile_2a = "fnl/aniseed/autoload.fnl"
-local _2amodule_name_2a = "jump-to-test.aniseed.autoload"
+local _2amodule_name_2a = "jump-to-clj-test.aniseed.autoload"
 local _2amodule_2a
 do
   package.loaded[_2amodule_name_2a] = {}

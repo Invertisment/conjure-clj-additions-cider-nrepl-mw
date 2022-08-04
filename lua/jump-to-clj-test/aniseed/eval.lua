@@ -1,5 +1,5 @@
 local _2afile_2a = "fnl/aniseed/eval.fnl"
-local _2amodule_name_2a = "jump-to-test.aniseed.eval"
+local _2amodule_name_2a = "jump-to-clj-test.aniseed.eval"
 local _2amodule_2a
 do
   package.loaded[_2amodule_name_2a] = {}
@@ -10,8 +10,8 @@ do
   _2amodule_2a["aniseed/locals"] = {}
   _2amodule_locals_2a = (_2amodule_2a)["aniseed/locals"]
 end
-local autoload = (require("jump-to-test.aniseed.autoload")).autoload
-local a, compile, fennel, fs, nvim = autoload("jump-to-test.aniseed.core"), autoload("jump-to-test.aniseed.compile"), autoload("jump-to-test.aniseed.fennel"), autoload("jump-to-test.aniseed.fs"), autoload("jump-to-test.aniseed.nvim")
+local autoload = (require("jump-to-clj-test.aniseed.autoload")).autoload
+local a, compile, fennel, fs, nvim = autoload("jump-to-clj-test.aniseed.core"), autoload("jump-to-clj-test.aniseed.compile"), autoload("jump-to-clj-test.aniseed.fennel"), autoload("jump-to-clj-test.aniseed.fs"), autoload("jump-to-clj-test.aniseed.nvim")
 do end (_2amodule_locals_2a)["a"] = a
 _2amodule_locals_2a["compile"] = compile
 _2amodule_locals_2a["fennel"] = fennel

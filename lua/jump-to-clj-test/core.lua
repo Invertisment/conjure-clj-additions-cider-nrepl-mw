@@ -10,8 +10,8 @@ do
   _2amodule_2a["aniseed/locals"] = {}
   _2amodule_locals_2a = (_2amodule_2a)["aniseed/locals"]
 end
-local autoload = (require("aniseed.autoload")).autoload
-local a, buffer, client, editor, fennel, nvim, str = autoload("aniseed.core"), autoload("conjure.buffer"), autoload("conjure.client"), autoload("conjure.editor"), autoload("fennel"), autoload("conjure.aniseed.nvim"), autoload("conjure.aniseed.string")
+local autoload = (require("jump-to-clj-test.aniseed.autoload")).autoload
+local a, buffer, client, editor, fennel, nvim, str = autoload("jump-to-clj-test.aniseed.core"), autoload("conjure.buffer"), autoload("conjure.client"), autoload("conjure.editor"), autoload("fennel"), autoload("conjure.aniseed.nvim"), autoload("conjure.aniseed.string")
 do end (_2amodule_locals_2a)["a"] = a
 _2amodule_locals_2a["buffer"] = buffer
 _2amodule_locals_2a["client"] = client
