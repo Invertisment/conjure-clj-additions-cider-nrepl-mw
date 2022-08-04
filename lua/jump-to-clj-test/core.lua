@@ -176,17 +176,7 @@ end
 _2amodule_2a["conjure-log-buf-content!"] = conjure_log_buf_content_21
 --[[ (conjure-log-buf-content!) ]]--
 local function filter_test_outputs(lines)
-  local function _14_(chunk)
-    return a.last(chunk)
-  end
-  local function _15_(chunk)
-    local function _16_(last_chunk_line)
-      return (parse_test_summary(last_chunk_line) or false)
-    end
-    a.update(chunk, #chunk, _16_)
-    return chunk
-  end
-  return a.last(a.filter(_14_, a.map(_15_, to_chunks(lines))))
+  return a.last(to_chunks(lines))
 end
 _2amodule_2a["filter-test-outputs"] = filter_test_outputs
 --[[ (filter-test-outputs (conjure-log-buf-content!)) ]]--
@@ -214,14 +204,14 @@ _2amodule_2a["filter-test-outputs"] = filter_test_outputs
 --[[ (filter-test-outputs namespace-testsuite) ]]--
 local function first_error_jump(test_result_chunk)
   local output
-  local function _17_(line)
+  local function _14_(line)
     if ("string" == type(line)) then
       return a.merge(run_current_test_find_suite_name(line), run_ns_tests_find_ns(line), failure_file_line(line))
     else
       return nil
     end
   end
-  output = a.reduce(a.merge, {}, a.map(_17_, test_result_chunk))
+  output = a.reduce(a.merge, {}, a.map(_14_, test_result_chunk))
   print("mm debug first-error-jump output ", output)
   if not a["empty?"](output) then
     return output
@@ -260,12 +250,12 @@ end
 _2amodule_2a["get-current-buffer!"] = get_current_buffer_21
 local function find_matching_buffer(expected_ns, buffers)
   local to_find = ns__3efilename(expected_ns)
-  local function _20_(desc)
+  local function _17_(desc)
     local id = a.get(desc, "buffer-id")
     local name = a.get(desc, "buffer-name")
     return string.find(name, to_find)
   end
-  return a.first(a.filter(_20_, buffers))
+  return a.first(a.filter(_17_, buffers))
 end
 _2amodule_2a["find-matching-buffer"] = find_matching_buffer
 --[[ (find-matching-buffer "core.core-test" sample-buffers) ]]--

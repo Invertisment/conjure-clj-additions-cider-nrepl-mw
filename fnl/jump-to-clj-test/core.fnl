@@ -159,14 +159,14 @@
 (defn filter-test-outputs [lines]
   (->> lines 
        to-chunks
-       (a.map (fn [chunk] 
-                (a.update chunk
-                          (length chunk) 
-                          (fn [last-chunk-line] 
-                            (or (parse-test-summary last-chunk-line)
-                                false)))
-                chunk))
-       (a.filter (fn [chunk] (a.last chunk)))
+       ;;(a.map (fn [chunk] 
+       ;;         (a.update chunk
+       ;;                   (length chunk) 
+       ;;                   (fn [last-chunk-line] 
+       ;;                     (or (parse-test-summary last-chunk-line)
+       ;;                         false)))
+       ;;         chunk))
+       ;;(a.filter (fn [chunk] (a.last chunk)))
        a.last))
 (comment (filter-test-outputs (conjure-log-buf-content!)))
 (comment (def single-testsuite 
