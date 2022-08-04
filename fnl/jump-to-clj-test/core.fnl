@@ -150,7 +150,6 @@
   (chunk-by-header #(execution-separator? $1) lines))
 
 (defn conjure-log-buf-content! []
-  (print "mm debug conjure-log-buf-name " (conjure-log-buf-name))
   (-> (conjure-log-buf-name)
       upsert-buf 
       (vim.api.nvim_buf_get_lines 0 -1 true)))
@@ -159,14 +158,6 @@
 (defn filter-test-outputs [lines]
   (->> lines 
        to-chunks
-       ;;(a.map (fn [chunk] 
-       ;;         (a.update chunk
-       ;;                   (length chunk) 
-       ;;                   (fn [last-chunk-line] 
-       ;;                     (or (parse-test-summary last-chunk-line)
-       ;;                         false)))
-       ;;         chunk))
-       ;;(a.filter (fn [chunk] (a.last chunk)))
        a.last))
 (comment (filter-test-outputs (conjure-log-buf-content!)))
 (comment (def single-testsuite 
@@ -203,7 +194,6 @@
                                         (failure-file-line line))
                                nil)))
                     (a.reduce a.merge {}))]
-    (print "mm debug first-error-jump output " output)
     (when (not (a.empty? output))
       output)))
 (comment (first-error-jump (filter-test-outputs namespace-testsuite)))
@@ -248,7 +238,6 @@
   (let [findings (first-error-jump (filter-test-outputs (conjure-log-buf-content!)))
         failing-namespace (a.get findings :namespace)
         failing-line (a.get findings :failed-line)]
-    (print "mm debug findings " findings)
     (if failing-namespace
       (a.merge (find-matching-buffer failing-namespace (get-buffers!)) findings)
       (when failing-line
@@ -288,7 +277,6 @@
 
 (defn jump-to-last-failing-test! []
   (let [to-jump (find-buffer-to-jump!)]
-    (print "mm debug to-jump " to-jump)
     (if to-jump 
       (jump! to-jump)
       (nvim.echo "No tests to jump to"))))

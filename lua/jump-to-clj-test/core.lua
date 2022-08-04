@@ -170,7 +170,6 @@ local function to_chunks(lines)
 end
 _2amodule_2a["to-chunks"] = to_chunks
 local function conjure_log_buf_content_21()
-  print("mm debug conjure-log-buf-name ", conjure_log_buf_name())
   return vim.api.nvim_buf_get_lines(upsert_buf(conjure_log_buf_name()), 0, -1, true)
 end
 _2amodule_2a["conjure-log-buf-content!"] = conjure_log_buf_content_21
@@ -212,7 +211,6 @@ local function first_error_jump(test_result_chunk)
     end
   end
   output = a.reduce(a.merge, {}, a.map(_14_, test_result_chunk))
-  print("mm debug first-error-jump output ", output)
   if not a["empty?"](output) then
     return output
   else
@@ -265,7 +263,6 @@ local function find_buffer_to_jump_21()
   local findings = first_error_jump(filter_test_outputs(conjure_log_buf_content_21()))
   local failing_namespace = a.get(findings, "namespace")
   local failing_line = a.get(findings, "failed-line")
-  print("mm debug findings ", findings)
   if failing_namespace then
     return a.merge(find_matching_buffer(failing_namespace, get_buffers_21()), findings)
   else
@@ -306,7 +303,6 @@ _2amodule_2a["jump!"] = jump_21
  :suite-name "partial-refunds-test"}) ]]--
 local function jump_to_last_failing_test_21()
   local to_jump = find_buffer_to_jump_21()
-  print("mm debug to-jump ", to_jump)
   if to_jump then
     return jump_21(to_jump)
   else
