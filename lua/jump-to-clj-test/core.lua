@@ -1,5 +1,5 @@
 local _2afile_2a = "fnl/jump-to-clj-test/core.fnl"
-local _2amodule_name_2a = "narrower.core"
+local _2amodule_name_2a = "jump-to-clj-test.core"
 local _2amodule_2a
 do
   package.loaded[_2amodule_name_2a] = {}

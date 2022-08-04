@@ -1,4 +1,4 @@
-(module narrower.core
+(module jump-to-clj-test.core
   {;; You can use Lua's regular require or Aniseed's autoload.
    require {;;xyz some.cool.tool.xyz
             ;; Fennel destructuring syntax works but defeats the point of autoload.

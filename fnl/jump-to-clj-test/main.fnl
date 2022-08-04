@@ -8,7 +8,7 @@
 
 (defn on-filetype []
   (nvim.echo "mm on-filetype")
-  ;;(nvim.buf_set_keymap)
+  ;;(nvim.buf_set_keymap 0 "n" "<locallleader>tf"  {:silent true :noremap true})
   ;;(buf :n :LogSplit (cfg :log_split) :conjure.log :split)
   ;;api.nvim_buf_set_keymap(0, "n", "<locallleader>tf", "lua show_diagnostics_details()", opts)
   )
