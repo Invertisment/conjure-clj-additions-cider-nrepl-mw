@@ -27,7 +27,7 @@ _2amodule_2a["execution-separator?"] = execution_separator_3f
 --[[ (execution-separator? "; ------------
 ") ]]--
 local function run_ns_tests_find_ns(line)
-  local found_namespace = string.match(line, "; run[-]ns[-]tests: ([^\n]+)")
+  local found_namespace = string.match(line, "; run[-]ns[-]tests: ([^\n ]+)")
   if found_namespace then
     return {namespace = found_namespace}
   else
@@ -37,6 +37,7 @@ end
 _2amodule_2a["run-ns-tests-find-ns"] = run_ns_tests_find_ns
 --[[ (run-ns-tests-find-ns "; run-ns-tests: core.core-test
 ") ]]--
+--[[ (run-ns-tests-find-ns "; run-ns-tests: core.core-test") ]]--
 --[[ (run-ns-tests-find-ns "; run-current-test: partial-test
 ") ]]--
 --[[ (run-ns-tests-find-ns "; hi: partial-test
@@ -199,19 +200,37 @@ _2amodule_2a["filter-test-outputs"] = filter_test_outputs
  "; Ran 6 tests containing 19 assertions."
  "; 1 failures, 0 errors."
  "{:test 6, :pass 18, :fail 1, :error 0, :type :summary}"]) ]]--
+--[[ (def ok-testsuite ["; --------------------------------------------------------------------------------"
+ "; run-ns-tests: core.core-test"
+ ";"
+ "; Testing core.core-test"
+ ";"
+ "; Ran 7 tests containing 19 assertions."
+ "; 0 failures, 0 errors."
+ "{:test 7, :pass 19, :fail 0, :error 0, :type :summary}"
+ "; --------------------------------------------------------------------------------"
+ "; run-ns-tests: core.core-test"
+ ";"
+ "; Testing core.core-test"
+ ";"
+ "; Ran 7 tests containing 19 assertions."
+ "; 0 failures, 0 errors."
+ "{:test 7, :pass 19, :fail 0, :error 0, :type :summary}"]) ]]--
 --[[ (filter-test-outputs single-testsuite) ]]--
 --[[ (filter-test-outputs namespace-testsuite) ]]--
+--[[ (filter-test-outputs ok-testsuite) ]]--
 local function first_error_jump(test_result_chunk)
   local output
   local function _14_(line)
     if ("string" == type(line)) then
-      return a.merge(run_current_test_find_suite_name(line), run_ns_tests_find_ns(line), failure_file_line(line))
+      local failure_line_details = failure_file_line(line)
+      return a.merge(run_current_test_find_suite_name(line), run_ns_tests_find_ns(line), failure_line_details)
     else
       return nil
     end
   end
   output = a.reduce(a.merge, {}, a.map(_14_, test_result_chunk))
-  if not a["empty?"](output) then
+  if a.get(output, "failed-line") then
     return output
   else
     return nil
@@ -221,6 +240,7 @@ _2amodule_2a["first-error-jump"] = first_error_jump
 --[[ (first-error-jump (filter-test-outputs namespace-testsuite)) ]]--
 --[[ (first-error-jump (filter-test-outputs single-testsuite)) ]]--
 --[[ (first-error-jump (filter-test-outputs (conjure-log-buf-content!))) ]]--
+--[[ (first-error-jump (filter-test-outputs ok-testsuite)) ]]--
 local function ns__3efilename(ns_name)
   return (string.gsub(string.gsub(ns_name, "-", "_"), "[.]", "/") .. ".clj")
 end

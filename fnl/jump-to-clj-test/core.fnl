@@ -18,7 +18,7 @@
              fennel fennel
              buffer conjure.buffer
              a aniseed.core
-             editor conjure.editor 
+             editor conjure.editor
              ;; Shorthand syntax for requiring under the same name.
              ;;: packer
              }})
@@ -45,23 +45,24 @@
 
 (defn run-ns-tests-find-ns [line]
   ; run-ns-tests: core.core-test
-  (let [found-namespace (string.match line "; run[-]ns[-]tests: ([^\n]+)")]
+  (let [found-namespace (string.match line "; run[-]ns[-]tests: ([^\n ]+)")]
     (when found-namespace
       {:namespace found-namespace})))
 (comment (run-ns-tests-find-ns "; run-ns-tests: core.core-test\n"))
+(comment (run-ns-tests-find-ns "; run-ns-tests: core.core-test"))
 (comment (run-ns-tests-find-ns "; run-current-test: partial-test\n"))
 (comment (run-ns-tests-find-ns "; hi: partial-test\n"))
 
 (defn run-current-test-find-suite-name [failure-line]
   ; run-current-test: partial-test
-  (let [found-suite-name (-> failure-line 
+  (let [found-suite-name (-> failure-line
                              (string.match "; FAIL in [(]([^ ]+)[)].*")) ]
     (or (when found-suite-name
           {:suite-name found-suite-name}))))
 (comment (run-current-test-find-suite-name "; FAIL in (my-test) (form-init3584826820959655573.clj:1664)\n"))
 
 (defn failure-file-line [failure-line]
-  (let [found-line (-> failure-line 
+  (let [found-line (-> failure-line
                        (string.match "; FAIL in [^ ]+ [^:]+:([0-9]+)")
                        tonumber)]
     (when found-line
@@ -77,7 +78,7 @@
 
 (defn parse-obj [line]
   (var output nil)
-  (pcall #(let [form (-> line 
+  (pcall #(let [form (-> line
                          (str-replace "," "")
                          fennel.eval)]
             (set output form)))
@@ -125,11 +126,11 @@
                         (let [current-group (a.get out :current-group)
                               output (a.get out :output)]
                           (if (f item)
-                            (do 
+                            (do
                               (when (not (empty? current-group))
                                 (table.insert output current-group))
                               (a.assoc out :current-group [item]))
-                            (do 
+                            (do
                               (table.insert current-group item)
                               out))))
                       {:output []
@@ -151,16 +152,16 @@
 
 (defn conjure-log-buf-content! []
   (-> (conjure-log-buf-name)
-      upsert-buf 
+      upsert-buf
       (vim.api.nvim_buf_get_lines 0 -1 true)))
 (comment (conjure-log-buf-content!))
 
 (defn filter-test-outputs [lines]
-  (->> lines 
+  (->> lines
        to-chunks
        a.last))
 (comment (filter-test-outputs (conjure-log-buf-content!)))
-(comment (def single-testsuite 
+(comment (def single-testsuite
            ["; --------------------------------------------------------------------------------"
             "; run-current-test: testsuite-test"
             "; --------------------------------------------------------------------------------"
@@ -171,34 +172,53 @@
             "; Ran 6 tests containing 19 assertions."
             "; 1 failures, 0 errors."
             "{:test 6, :pass 18, :fail 1, :error 0, :type :summary}"]))
-(comment (def namespace-testsuite 
+(comment (def namespace-testsuite
            ["; --------------------------------------------------------------------------------"
             "; run-ns-tests: core.core-test"
-            ";" 
+            ";"
             "; Testing core.core-test"
-            ";" 
+            ";"
             "; FAIL in (partial-refunds-test) (form-init2746081655060792820.clj:1664)"
             ";"
             "; Ran 6 tests containing 19 assertions."
             "; 1 failures, 0 errors."
             "{:test 6, :pass 18, :fail 1, :error 0, :type :summary}"]))
+(comment (def ok-testsuite
+           ["; --------------------------------------------------------------------------------"
+            "; run-ns-tests: core.core-test"
+            ";"
+            "; Testing core.core-test"
+            ";"
+            "; Ran 7 tests containing 19 assertions."
+            "; 0 failures, 0 errors."
+            "{:test 7, :pass 19, :fail 0, :error 0, :type :summary}"
+            "; --------------------------------------------------------------------------------"
+            "; run-ns-tests: core.core-test"
+            ";"
+            "; Testing core.core-test"
+            ";"
+            "; Ran 7 tests containing 19 assertions."
+            "; 0 failures, 0 errors."
+            "{:test 7, :pass 19, :fail 0, :error 0, :type :summary}" ]))
 (comment (filter-test-outputs single-testsuite))
 (comment (filter-test-outputs namespace-testsuite))
+(comment (filter-test-outputs ok-testsuite))
 
 (defn first-error-jump [test-result-chunk]
   (let [output (->> test-result-chunk
                     (a.map (fn [line]
-                             (if (= "string" (type line))
-                               (a.merge (run-current-test-find-suite-name line)
-                                        (run-ns-tests-find-ns line)
-                                        (failure-file-line line))
-                               nil)))
+                             (when (= "string" (type line))
+                               (let [failure-line-details (failure-file-line line)]
+                                 (a.merge (run-current-test-find-suite-name line)
+                                          (run-ns-tests-find-ns line)
+                                          failure-line-details)))))
                     (a.reduce a.merge {}))]
-    (when (not (a.empty? output))
+    (when (a.get output :failed-line)
       output)))
 (comment (first-error-jump (filter-test-outputs namespace-testsuite)))
 (comment (first-error-jump (filter-test-outputs single-testsuite)))
 (comment (first-error-jump (filter-test-outputs (conjure-log-buf-content!))))
+(comment (first-error-jump (filter-test-outputs ok-testsuite)))
 
 (defn ns->filename [ns-name]
   (-> ns-name
@@ -223,10 +243,10 @@
 (defn get-current-buffer! []
   (buffer-details! (nvim.buf.nr)))
 
-(defn find-matching-buffer [expected-ns buffers] 
+(defn find-matching-buffer [expected-ns buffers]
   (let [to-find (ns->filename expected-ns)]
     (->> buffers
-         (a.filter (fn [desc] 
+         (a.filter (fn [desc]
                      (let [id (a.get desc :buffer-id)
                            name (a.get desc :buffer-name)]
                        (string.find name to-find))))
@@ -277,7 +297,7 @@
 
 (defn jump-to-last-failing-test! []
   (let [to-jump (find-buffer-to-jump!)]
-    (if to-jump 
+    (if to-jump
       (jump! to-jump)
       (nvim.echo "No tests to jump to"))))
 (comment (jump-to-last-failing-test!))
