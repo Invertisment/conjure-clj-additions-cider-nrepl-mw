@@ -150,6 +150,7 @@
   (chunk-by-header #(execution-separator? $1) lines))
 
 (defn conjure-log-buf-content! []
+  (print "mm debug conjure-log-buf-name " (conjure-log-buf-name))
   (-> (conjure-log-buf-name)
       upsert-buf 
       (vim.api.nvim_buf_get_lines 0 -1 true)))
@@ -202,6 +203,7 @@
                                         (failure-file-line line))
                                nil)))
                     (a.reduce a.merge {}))]
+    (print "mm debug first-error-jump output " output)
     (when (not (a.empty? output))
       output)))
 (comment (first-error-jump (filter-test-outputs namespace-testsuite)))
