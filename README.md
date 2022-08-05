@@ -5,6 +5,8 @@ Provides these additional functions to bind to your wanted keys:
 ```
 :ConjureAdditionsJumpToFailingCljTest // Jump to first failed test
 :ConjureAdditionsRunTestsInTestNs     // Run tests from test ns regardless if you're in test or in main ns
+:ConjureAdditionsNsRemove             // Run `remove-ns` on the current namespace
+:ConjureAdditionsNsCleanup            // Clean current ns (doesn't break the ns that imports current ns)
 ```
 
 It's based on [Conjure](https://github.com/Olical/conjure/) and requires it to operate (strongly coupled, parses the log output).

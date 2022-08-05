@@ -273,4 +273,3 @@
       (jump! to-jump)
       (nvim.echo "No tests to jump to"))))
 (comment (jump-to-last-failing-test!))
-
