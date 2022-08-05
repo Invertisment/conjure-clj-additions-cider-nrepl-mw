@@ -36,11 +36,11 @@ This function allows two jumping modes:
 ### `ConjureAdditionsRunTestsInTestNs`
 With this you can run `core_test.clj` regardless whether you're located in `core.clj` or `core_test.clj`.
 
-To bind it to `<>tn` you can do this (it also moves `<>tn` and `<>tN` bindings):
+To bind it to `<>tn` you can do this (the first two lines change Conjure's keybinds `tn` and `tN` to NOOP):
 
 ```
-let g:conjure#client#clojure#nrepl#mapping#run_alternate_ns_tests = '💩'
-let g:conjure#client#clojure#nrepl#mapping#run_current_ns_tests = '💩'
+let g:conjure#client#clojure#nrepl#mapping#run_alternate_ns_tests = '🇺🇦'
+let g:conjure#client#clojure#nrepl#mapping#run_current_ns_tests = '🇺🇦'
 autocmd FileType clojure nnoremap <silent> <localleader>tn :JumpToFirstCljTestRunTestNsTests<CR>
 ```
 
