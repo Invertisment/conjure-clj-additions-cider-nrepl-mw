@@ -1,9 +1,9 @@
-package.preload["jump-to-cljtest.aniseed.fennel.repl"] = package.preload["jump-to-cljtest.aniseed.fennel.repl"] or function(...)
-  local utils = require("jump-to-cljtest.aniseed.fennel.utils")
-  local parser = require("jump-to-cljtest.aniseed.fennel.parser")
-  local compiler = require("jump-to-cljtest.aniseed.fennel.compiler")
-  local specials = require("jump-to-cljtest.aniseed.fennel.specials")
-  local view = require("jump-to-cljtest.aniseed.fennel.view")
+package.preload["conjure-additions.aniseed.fennel.repl"] = package.preload["conjure-additions.aniseed.fennel.repl"] or function(...)
+  local utils = require("conjure-additions.aniseed.fennel.utils")
+  local parser = require("conjure-additions.aniseed.fennel.parser")
+  local compiler = require("conjure-additions.aniseed.fennel.compiler")
+  local specials = require("conjure-additions.aniseed.fennel.specials")
+  local view = require("conjure-additions.aniseed.fennel.view")
   local unpack = (table.unpack or _G.unpack)
   local function default_read_chunk(parser_state)
     local function _565_()
@@ -661,11 +661,11 @@ package.preload["jump-to-cljtest.aniseed.fennel.repl"] = package.preload["jump-t
   end
   return repl
 end
-package.preload["jump-to-cljtest.aniseed.fennel.specials"] = package.preload["jump-to-cljtest.aniseed.fennel.specials"] or function(...)
-  local utils = require("jump-to-cljtest.aniseed.fennel.utils")
-  local view = require("jump-to-cljtest.aniseed.fennel.view")
-  local parser = require("jump-to-cljtest.aniseed.fennel.parser")
-  local compiler = require("jump-to-cljtest.aniseed.fennel.compiler")
+package.preload["conjure-additions.aniseed.fennel.specials"] = package.preload["conjure-additions.aniseed.fennel.specials"] or function(...)
+  local utils = require("conjure-additions.aniseed.fennel.utils")
+  local view = require("conjure-additions.aniseed.fennel.view")
+  local parser = require("conjure-additions.aniseed.fennel.parser")
+  local compiler = require("conjure-additions.aniseed.fennel.compiler")
   local unpack = (table.unpack or _G.unpack)
   local SPECIALS = compiler.scopes.global.specials
   local function wrap_env(env)
@@ -1952,7 +1952,7 @@ package.preload["jump-to-cljtest.aniseed.fennel.specials"] = package.preload["ju
     end
   end
   local function metadata_only_fennel(modname)
-    if ((modname == "jump-to-cljtest.aniseed.fennel.macros") or (package and package.loaded and ("table" == type(package.loaded[modname])) and (package.loaded[modname].metadata == compiler.metadata))) then
+    if ((modname == "conjure-additions.aniseed.fennel.macros") or (package and package.loaded and ("table" == type(package.loaded[modname])) and (package.loaded[modname].metadata == compiler.metadata))) then
       return {metadata = compiler.metadata}
     else
       return nil
@@ -2144,10 +2144,10 @@ package.preload["jump-to-cljtest.aniseed.fennel.specials"] = package.preload["ju
   doc_special("eval-compiler", {"..."}, "Evaluate the body at compile-time. Use the macro system instead if possible.", true)
   return {doc = doc_2a, ["current-global-names"] = current_global_names, ["load-code"] = load_code, ["macro-loaded"] = macro_loaded, ["macro-searchers"] = macro_searchers, ["make-compiler-env"] = make_compiler_env, ["search-module"] = search_module, ["make-searcher"] = make_searcher, ["wrap-env"] = wrap_env}
 end
-package.preload["jump-to-cljtest.aniseed.fennel.compiler"] = package.preload["jump-to-cljtest.aniseed.fennel.compiler"] or function(...)
-  local utils = require("jump-to-cljtest.aniseed.fennel.utils")
-  local parser = require("jump-to-cljtest.aniseed.fennel.parser")
-  local friend = require("jump-to-cljtest.aniseed.fennel.friend")
+package.preload["conjure-additions.aniseed.fennel.compiler"] = package.preload["conjure-additions.aniseed.fennel.compiler"] or function(...)
+  local utils = require("conjure-additions.aniseed.fennel.utils")
+  local parser = require("conjure-additions.aniseed.fennel.parser")
+  local friend = require("conjure-additions.aniseed.fennel.friend")
   local unpack = (table.unpack or _G.unpack)
   local scopes = {}
   local function make_scope(_3fparent)
@@ -3257,8 +3257,8 @@ package.preload["jump-to-cljtest.aniseed.fennel.compiler"] = package.preload["ju
   end
   return {compile = compile, compile1 = compile1, ["compile-stream"] = compile_stream, ["compile-string"] = compile_string, emit = emit, destructure = destructure, ["require-include"] = require_include, autogensym = autogensym, gensym = gensym, ["do-quote"] = do_quote, ["global-mangling"] = global_mangling, ["global-unmangling"] = global_unmangling, ["apply-manglings"] = apply_manglings, macroexpand = macroexpand_2a, ["declare-local"] = declare_local, ["make-scope"] = make_scope, ["keep-side-effects"] = keep_side_effects, ["symbol-to-expression"] = symbol_to_expression, assert = assert_compile, scopes = scopes, traceback = traceback, metadata = make_metadata(), sourcemap = sourcemap}
 end
-package.preload["jump-to-cljtest.aniseed.fennel.friend"] = package.preload["jump-to-cljtest.aniseed.fennel.friend"] or function(...)
-  local utils = require("jump-to-cljtest.aniseed.fennel.utils")
+package.preload["conjure-additions.aniseed.fennel.friend"] = package.preload["conjure-additions.aniseed.fennel.friend"] or function(...)
+  local utils = require("conjure-additions.aniseed.fennel.utils")
   local suggestions = {["unexpected multi symbol (.*)"] = {"removing periods or colons from %s"}, ["use of global (.*) is aliased by a local"] = {"renaming local %s", "refer to the global using _G.%s instead of directly"}, ["local (.*) was overshadowed by a special form or macro"] = {"renaming local %s"}, ["global (.*) conflicts with local"] = {"renaming local %s"}, ["expected var (.*)"] = {"declaring %s using var instead of let/local", "introducing a new local instead of changing the value of %s"}, ["expected macros to be table"] = {"ensuring your macro definitions return a table"}, ["expected each macro to be function"] = {"ensuring that the value for each key in your macros table contains a function", "avoid defining nested macro tables"}, ["macro not found in macro module"] = {"checking the keys of the imported macro module's returned table"}, ["macro tried to bind (.*) without gensym"] = {"changing to %s# when introducing identifiers inside macros"}, ["unknown identifier in strict mode: (.*)"] = {"looking to see if there's a typo", "using the _G table instead, eg. _G.%s if you really want a global", "moving this code to somewhere that %s is in scope", "binding %s as a local in the scope of this code"}, ["expected a function.* to call"] = {"removing the empty parentheses", "using square brackets if you want an empty table"}, ["cannot call literal value"] = {"checking for typos", "checking for a missing function name"}, ["unexpected vararg"] = {"putting \"...\" at the end of the fn parameters if the vararg was intended"}, ["multisym method calls may only be in call position"] = {"using a period instead of a colon to reference a table's fields", "putting parens around this"}, ["unused local (.*)"] = {"renaming the local to _%s if it is meant to be unused", "fixing a typo so %s is used", "disabling the linter which checks for unused locals"}, ["expected parameters"] = {"adding function parameters as a list of identifiers in brackets"}, ["unable to bind (.*)"] = {"replacing the %s with an identifier"}, ["expected rest argument before last parameter"] = {"moving & to right before the final identifier when destructuring"}, ["expected vararg as last parameter"] = {"moving the \"...\" to the end of the parameter list"}, ["expected symbol for function parameter: (.*)"] = {"changing %s to an identifier instead of a literal value"}, ["could not compile value of type "] = {"debugging the macro you're calling to return a list or table"}, ["expected local"] = {"looking for a typo", "looking for a local which is used out of its scope"}, ["expected body expression"] = {"putting some code in the body of this form after the bindings"}, ["expected binding and iterator"] = {"making sure you haven't omitted a local name or iterator"}, ["expected binding sequence"] = {"placing a table here in square brackets containing identifiers to bind"}, ["expected even number of name/value bindings"] = {"finding where the identifier or value is missing"}, ["may only be used at compile time"] = {"moving this to inside a macro if you need to manipulate symbols/lists", "using square brackets instead of parens to construct a table"}, ["unexpected closing delimiter (.)"] = {"deleting %s", "adding matching opening delimiter earlier"}, ["mismatched closing delimiter (.), expected (.)"] = {"replacing %s with %s", "deleting %s", "adding matching opening delimiter earlier"}, ["expected even number of values in table literal"] = {"removing a key", "adding a value"}, ["expected whitespace before opening delimiter"] = {"adding whitespace"}, ["invalid character: (.)"] = {"deleting or replacing %s", "avoiding reserved characters like \", \\, ', ~, ;, @, `, and comma"}, ["could not read number (.*)"] = {"removing the non-digit character", "beginning the identifier with a non-digit if it is not meant to be a number"}, ["can't start multisym segment with a digit"] = {"removing the digit", "adding a non-digit before the digit"}, ["malformed multisym"] = {"ensuring each period or colon is not followed by another period or colon"}, ["method must be last component"] = {"using a period instead of a colon for field access", "removing segments after the colon", "making the method call, then looking up the field on the result"}, ["$ and $... in hashfn are mutually exclusive"] = {"modifying the hashfn so it only contains $... or $, $1, $2, $3, etc"}, ["tried to reference a macro at runtime"] = {"renaming the macro so as not to conflict with locals"}, ["tried to reference a special form at runtime"] = {"wrapping the special in a function if you need it to be first class"}, ["expected even number of pattern/body pairs"] = {"checking that every pattern has a body to go with it", "adding _ before the final body"}, ["unexpected arguments"] = {"removing an argument", "checking for typos"}, ["unexpected iterator clause"] = {"removing an argument", "checking for typos"}}
   local unpack = (table.unpack or _G.unpack)
   local function suggest(msg)
@@ -3356,9 +3356,9 @@ package.preload["jump-to-cljtest.aniseed.fennel.friend"] = package.preload["jump
   end
   return {["assert-compile"] = assert_compile, ["parse-error"] = parse_error}
 end
-package.preload["jump-to-cljtest.aniseed.fennel.parser"] = package.preload["jump-to-cljtest.aniseed.fennel.parser"] or function(...)
-  local utils = require("jump-to-cljtest.aniseed.fennel.utils")
-  local friend = require("jump-to-cljtest.aniseed.fennel.friend")
+package.preload["conjure-additions.aniseed.fennel.parser"] = package.preload["conjure-additions.aniseed.fennel.parser"] or function(...)
+  local utils = require("conjure-additions.aniseed.fennel.utils")
+  local friend = require("conjure-additions.aniseed.fennel.friend")
   local unpack = (table.unpack or _G.unpack)
   local function granulate(getchunk)
     local c, index, done_3f = "", 1, false
@@ -3801,7 +3801,7 @@ package.preload["jump-to-cljtest.aniseed.fennel.parser"] = package.preload["jump
   return {granulate = granulate, parser = parser, ["string-stream"] = string_stream, ["sym-char?"] = sym_char_3f}
 end
 local utils
-package.preload["jump-to-cljtest.aniseed.fennel.view"] = package.preload["jump-to-cljtest.aniseed.fennel.view"] or function(...)
+package.preload["conjure-additions.aniseed.fennel.view"] = package.preload["conjure-additions.aniseed.fennel.view"] or function(...)
   local type_order = {number = 1, boolean = 2, string = 3, table = 4, ["function"] = 5, userdata = 6, thread = 7}
   local lua_pairs = pairs
   local lua_ipairs = ipairs
@@ -4357,8 +4357,8 @@ package.preload["jump-to-cljtest.aniseed.fennel.view"] = package.preload["jump-t
   end
   return view
 end
-package.preload["jump-to-cljtest.aniseed.fennel.utils"] = package.preload["jump-to-cljtest.aniseed.fennel.utils"] or function(...)
-  local view = require("jump-to-cljtest.aniseed.fennel.view")
+package.preload["conjure-additions.aniseed.fennel.utils"] = package.preload["conjure-additions.aniseed.fennel.utils"] or function(...)
+  local view = require("conjure-additions.aniseed.fennel.view")
   local version = "1.1.0"
   local function luajit_vm_3f()
     return ((nil ~= jit) and (type(jit) == "table") and (nil ~= jit.on) and (nil ~= jit.off) and (type(jit.version_num) == "number"))
@@ -4784,12 +4784,12 @@ package.preload["jump-to-cljtest.aniseed.fennel.utils"] = package.preload["jump-
   end
   return {warn = warn, allpairs = allpairs, stablepairs = stablepairs, copy = copy, kvmap = kvmap, map = map, ["walk-tree"] = walk_tree, ["member?"] = member_3f, list = list, sequence = sequence, sym = sym, varg = varg, expr = expr, comment = comment_2a, ["comment?"] = comment_3f, ["expr?"] = expr_3f, ["list?"] = list_3f, ["multi-sym?"] = multi_sym_3f, ["sequence?"] = sequence_3f, ["sym?"] = sym_3f, ["table?"] = table_3f, ["varg?"] = varg_3f, ["quoted?"] = quoted_3f, ["string?"] = string_3f, ["valid-lua-identifier?"] = valid_lua_identifier_3f, ["lua-keywords"] = lua_keywords, hook = hook, ["propagate-options"] = propagate_options, root = root, ["debug-on?"] = debug_on_3f, ["ast-source"] = ast_source, version = version, ["runtime-version"] = runtime_version, path = table.concat({"./?.fnl", "./?/init.fnl", getenv("FENNEL_PATH")}, ";"), ["macro-path"] = table.concat({"./?.fnl", "./?/init-macros.fnl", "./?/init.fnl", getenv("FENNEL_MACRO_PATH")}, ";")}
 end
-utils = require("jump-to-cljtest.aniseed.fennel.utils")
-local parser = require("jump-to-cljtest.aniseed.fennel.parser")
-local compiler = require("jump-to-cljtest.aniseed.fennel.compiler")
-local specials = require("jump-to-cljtest.aniseed.fennel.specials")
-local repl = require("jump-to-cljtest.aniseed.fennel.repl")
-local view = require("jump-to-cljtest.aniseed.fennel.view")
+utils = require("conjure-additions.aniseed.fennel.utils")
+local parser = require("conjure-additions.aniseed.fennel.parser")
+local compiler = require("conjure-additions.aniseed.fennel.compiler")
+local specials = require("conjure-additions.aniseed.fennel.specials")
+local repl = require("conjure-additions.aniseed.fennel.repl")
+local view = require("conjure-additions.aniseed.fennel.view")
 local function eval_env(env, opts)
   if (env == "_COMPILER") then
     local env0 = specials["make-compiler-env"](nil, compiler.scopes.compiler, {}, opts)
@@ -5462,7 +5462,7 @@ do
    :match match-where
    :match-try match-try*}
   ]===]
-  local module_name = "jump-to-cljtest.aniseed.fennel.macros"
+  local module_name = "conjure-additions.aniseed.fennel.macros"
   local _
   local function _682_()
     return mod

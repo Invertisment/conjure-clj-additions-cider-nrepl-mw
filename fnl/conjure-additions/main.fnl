@@ -1,4 +1,4 @@
-(module jump-to-cljtest.main
+(module conjure-additions.main
   {require {nvim conjure.aniseed.nvim
             str conjure.aniseed.string
             bridge conjure.bridge
@@ -20,8 +20,8 @@
     {:silent true :noremap true}))
 
 (defn on-filetype []
-  (bind! "n" "<localleader>tf" :JumpToFirstCljTest :jump-to-cljtest.jump :jump-to-last-failing-test!)
-  (provide-fn! :JumpToFirstCljTestRunTestNsTests :jump-to-cljtest.additional-fns :run-test-ns-tests!)
+  (bind! "n" "<localleader>tf" :JumpToFirstCljTest :conjure-additions.jump :jump-to-last-failing-test!)
+  (provide-fn! :JumpToFirstCljTestRunTestNsTests :conjure-additions.additional-fns :run-test-ns-tests!)
   )
 
 (defn init-mappings! []
@@ -29,7 +29,7 @@
   (nvim.ex.autocmd_)
   (nvim.ex.autocmd
     :FileType (str.join "," [:clojure])
-    (bridge.viml->lua :jump-to-cljtest.main :on-filetype {}))
+    (bridge.viml->lua :conjure-additions.main :on-filetype {}))
   (nvim.ex.augroup :END)
   )
 

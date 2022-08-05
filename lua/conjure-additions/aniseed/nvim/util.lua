@@ -1,5 +1,5 @@
 local _2afile_2a = "fnl/aniseed/nvim/util.fnl"
-local _2amodule_name_2a = "jump-to-cljtest.aniseed.nvim.util"
+local _2amodule_name_2a = "conjure-additions.aniseed.nvim.util"
 local _2amodule_2a
 do
   package.loaded[_2amodule_name_2a] = {}
@@ -10,8 +10,8 @@ do
   _2amodule_2a["aniseed/locals"] = {}
   _2amodule_locals_2a = (_2amodule_2a)["aniseed/locals"]
 end
-local autoload = (require("jump-to-cljtest.aniseed.autoload")).autoload
-local nvim = autoload("jump-to-cljtest.aniseed.nvim")
+local autoload = (require("conjure-additions.aniseed.autoload")).autoload
+local nvim = autoload("conjure-additions.aniseed.nvim")
 do end (_2amodule_locals_2a)["nvim"] = nvim
 local function normal(keys)
   return nvim.ex.silent(("exe \"normal! " .. keys .. "\""))

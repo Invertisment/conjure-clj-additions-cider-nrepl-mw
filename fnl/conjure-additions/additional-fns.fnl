@@ -1,4 +1,4 @@
-(module jump-to-cljtest.additional-fns
+(module conjure-additions.additional-fns
   { autoload {text conjure.text
               extract conjure.extract
               nrepl-action conjure.client.clojure.nrepl.action}})
