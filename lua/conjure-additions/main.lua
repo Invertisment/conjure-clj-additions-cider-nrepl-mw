@@ -25,8 +25,8 @@ local function bind_21(mode, keystroke, fn_name, ns, f)
 end
 _2amodule_2a["bind!"] = bind_21
 local function on_filetype()
-  bind_21("n", "<localleader>tf", "JumpToFirstCljTest", "conjure-additions.jump", "jump-to-last-failing-test!")
-  return provide_fn_21("JumpToFirstCljTestRunTestNsTests", "conjure-additions.additional-fns", "run-test-ns-tests!")
+  provide_fn_21("ConjureAdditionsJumpToFailingCljTest", "conjure-additions.jump", "jump-to-last-failing-test!")
+  return provide_fn_21("ConjureAdditionsRunTestsInTestNs", "conjure-additions.additional-fns", "run-test-ns-tests!")
 end
 _2amodule_2a["on-filetype"] = on_filetype
 local function init_mappings_21()
