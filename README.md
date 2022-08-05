@@ -4,7 +4,7 @@ Provides these additional functions to bind to your wanted keys:
 
 ```
 :ConjureAdditionsJumpToFailingCljTest // Jump to first failed test
-:ConjureAdditionsRunTestsInTestNs     // Run tests regardless if you're in test or not in test ns
+:ConjureAdditionsRunTestsInTestNs     // Run tests from test ns regardless if you're in test or in main ns
 ```
 
 It's based on [Conjure](https://github.com/Olical/conjure/) and requires it to operate (strongly coupled, parses the log output).
