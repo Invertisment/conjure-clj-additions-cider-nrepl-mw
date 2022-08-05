@@ -13,8 +13,7 @@
       (nrepl-action.run-alternate-ns-tests))))
 
 (defn remove-ns! []
-  (eval.eval-str {:code "(remove-ns (symbol (str *ns*)))"
-                  :origin :remove-ns}))
+  (eval.command "(remove-ns (symbol (str *ns*)))"))
 
 (defn cleanup-ns! []
   (eval.command

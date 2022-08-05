@@ -28,7 +28,7 @@ local function run_test_ns_tests_21()
 end
 _2amodule_2a["run-test-ns-tests!"] = run_test_ns_tests_21
 local function remove_ns_21()
-  return eval["eval-str"]({code = "(remove-ns (symbol (str *ns*)))", origin = "remove-ns"})
+  return eval.command("(remove-ns (symbol (str *ns*)))")
 end
 _2amodule_2a["remove-ns!"] = remove_ns_21
 local function cleanup_ns_21()
