@@ -1,21 +1,27 @@
 (module jump-to-cljtest.main
   {require {nvim conjure.aniseed.nvim
             str conjure.aniseed.string
-            bridge conjure.bridge}})
+            bridge conjure.bridge
+            config conjure.config
+            }})
 
-(defn bind! [mode keystroke fn-name ns f]
+(defn provide-fn! [fn-name ns f]
   (nvim.ex.command_
     (.. "-range " fn-name)
-    (bridge.viml->lua ns f {}))
+    (bridge.viml->lua ns f {})))
+
+(defn bind! [mode keystroke fn-name ns f]
+  (provide-fn! fn-name ns f)
   (nvim.buf_set_keymap
     0
-    "n"
+    mode
     keystroke
     (.. ":" fn-name "<cr>")
     {:silent true :noremap true}))
 
 (defn on-filetype []
-  (bind! "n" "<localleader>tf" :JumpToFirstCljTest :jump-to-cljtest.core :jump-to-last-failing-test!)
+  (bind! "n" "<localleader>tf" :JumpToFirstCljTest :jump-to-cljtest.jump :jump-to-last-failing-test!)
+  (provide-fn! :JumpToFirstCljTestRunTestNsTests :jump-to-cljtest.additional-fns :run-test-ns-tests!)
   )
 
 (defn init-mappings! []
@@ -29,3 +35,4 @@
 
 (defn init []
   (init-mappings!))
+

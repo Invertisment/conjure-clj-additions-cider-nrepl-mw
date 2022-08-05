@@ -1,4 +1,4 @@
-(module jump-to-cljtest.core
+(module jump-to-cljtest.jump
   { autoload {nvim conjure.aniseed.nvim
               str conjure.aniseed.string
               client conjure.client
@@ -8,9 +8,7 @@
               editor conjure.editor }})
 
 (defn execution-separator? [line]
-  (string.match line "; [-]+"))
-(comment (execution-separator? "; ------------"))
-(comment (execution-separator? "; ------------\n"))
+  (string.match line "^; [-]"))
 
 (defn run-ns-tests-find-ns [line]
   ; run-ns-tests: core.core-test
@@ -24,8 +22,8 @@
 
 (defn run-current-test-find-suite-name [failure-line]
   ; run-current-test: partial-test
-  (let [found-suite-name (or (string.match failure-line  "; FAIL in [(]([^ ]+)[)].*")
-                             (string.match failure-line "; ERROR in [(]([^ ]+)[)].*")) ]
+  (let [found-suite-name (or (string.match failure-line  "; FAIL in [(]([^ ]+)[)]")
+                             (string.match failure-line "; ERROR in [(]([^ ]+)[)]")) ]
     (or (when found-suite-name
           {:suite-name found-suite-name}))))
 (comment (run-current-test-find-suite-name "; FAIL in (my-test) (form-init3584826820959655573.clj:1664)\n"))
@@ -107,6 +105,16 @@
 (comment (chunk-by-header (fn [item] (= item 2)) [2 3 2 5]))
 (comment (chunk-by-header (fn [item] (= item 2)) [2 2]))
 
+(defn take-last-matching-chunk [chunk-boundary-fn chunk-match-fn li]
+  (->> li
+       (chunk-by-header chunk-boundary-fn)
+       (a.filter chunk-match-fn)
+       a.last))
+(comment (take-last-matching-chunk (fn [item] (= item 2)) [1 2 3 4 5 6 7 2 8 9 2 0 2]))
+(comment (take-last-matching-chunk (fn [item] (= item 2)) [1 2 3 4 5 6 7 2 8 9 2 0]))
+(comment (take-last-matching-chunk (fn [item] (= item 2)) [2 3 2 5]))
+(comment (take-last-matching-chunk (fn [item] (= item 2)) [2 2]))
+
 (defn to-chunks [lines]
   (chunk-by-header #(execution-separator? $1) lines))
 
@@ -168,9 +176,6 @@
 (comment (filter-test-outputs ok-testsuite))
 (comment (filter-test-outputs (a.concat namespace-testsuite ok-testsuite)))
 
-(defn reduce-reverse [f init xs]
-  (a.reduce (fn [a b] (f b a)) init xs))
-
 (defn first-error-jump [test-result-chunk]
   (let [output (->> test-result-chunk
                     (a.map (fn [line]
@@ -180,7 +185,7 @@
                                              (run-current-test-find-suite-name line)
                                              (run-ns-tests-find-ns line)
                                              failure-line-details)))))
-                    (reduce-reverse a.merge {}))]
+                    (a.reduce (fn [out item] (a.merge item out)) {}))]
     (when (a.get output :failed-line)
       output)))
 (comment (first-error-jump (filter-test-outputs namespace-testsuite)))

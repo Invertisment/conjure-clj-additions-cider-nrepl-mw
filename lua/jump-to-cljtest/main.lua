@@ -10,17 +10,23 @@ do
   _2amodule_2a["aniseed/locals"] = {}
   _2amodule_locals_2a = (_2amodule_2a)["aniseed/locals"]
 end
-local bridge, nvim, str = require("conjure.bridge"), require("conjure.aniseed.nvim"), require("conjure.aniseed.string")
+local bridge, config, nvim, str = require("conjure.bridge"), require("conjure.config"), require("conjure.aniseed.nvim"), require("conjure.aniseed.string")
 do end (_2amodule_locals_2a)["bridge"] = bridge
+_2amodule_locals_2a["config"] = config
 _2amodule_locals_2a["nvim"] = nvim
 _2amodule_locals_2a["str"] = str
+local function provide_fn_21(fn_name, ns, f)
+  return nvim.ex.command_(("-range " .. fn_name), bridge["viml->lua"](ns, f, {}))
+end
+_2amodule_2a["provide-fn!"] = provide_fn_21
 local function bind_21(mode, keystroke, fn_name, ns, f)
-  nvim.ex.command_(("-range " .. fn_name), bridge["viml->lua"](ns, f, {}))
-  return nvim.buf_set_keymap(0, "n", keystroke, (":" .. fn_name .. "<cr>"), {silent = true, noremap = true})
+  provide_fn_21(fn_name, ns, f)
+  return nvim.buf_set_keymap(0, mode, keystroke, (":" .. fn_name .. "<cr>"), {silent = true, noremap = true})
 end
 _2amodule_2a["bind!"] = bind_21
 local function on_filetype()
-  return bind_21("n", "<localleader>tf", "JumpToFirstCljTest", "jump-to-cljtest.core", "jump-to-last-failing-test!")
+  bind_21("n", "<localleader>tf", "JumpToFirstCljTest", "jump-to-cljtest.jump", "jump-to-last-failing-test!")
+  return provide_fn_21("JumpToFirstCljTestRunTestNsTests", "jump-to-cljtest.additional-fns", "run-test-ns-tests!")
 end
 _2amodule_2a["on-filetype"] = on_filetype
 local function init_mappings_21()

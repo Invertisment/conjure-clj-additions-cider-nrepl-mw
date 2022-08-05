@@ -1,5 +1,5 @@
-local _2afile_2a = "fnl/jump-to-cljtest/core.fnl"
-local _2amodule_name_2a = "jump-to-cljtest.core"
+local _2afile_2a = "fnl/jump-to-cljtest/jump.fnl"
+local _2amodule_name_2a = "jump-to-cljtest.jump"
 local _2amodule_2a
 do
   package.loaded[_2amodule_name_2a] = {}
@@ -20,12 +20,9 @@ _2amodule_locals_2a["fennel"] = fennel
 _2amodule_locals_2a["nvim"] = nvim
 _2amodule_locals_2a["str"] = str
 local function execution_separator_3f(line)
-  return string.match(line, "; [-]+")
+  return string.match(line, "^; [-]")
 end
 _2amodule_2a["execution-separator?"] = execution_separator_3f
---[[ (execution-separator? "; ------------") ]]--
---[[ (execution-separator? "; ------------
-") ]]--
 local function run_ns_tests_find_ns(line)
   local found_namespace = string.match(line, "; run[-]ns[-]tests: ([^\n ]+)")
   if found_namespace then
@@ -43,7 +40,7 @@ _2amodule_2a["run-ns-tests-find-ns"] = run_ns_tests_find_ns
 --[[ (run-ns-tests-find-ns "; hi: partial-test
 ") ]]--
 local function run_current_test_find_suite_name(failure_line)
-  local found_suite_name = (string.match(failure_line, "; FAIL in [(]([^ ]+)[)].*") or string.match(failure_line, "; ERROR in [(]([^ ]+)[)].*"))
+  local found_suite_name = (string.match(failure_line, "; FAIL in [(]([^ ]+)[)]") or string.match(failure_line, "; ERROR in [(]([^ ]+)[)]"))
   local function _2_()
     if found_suite_name then
       return {["suite-name"] = found_suite_name}
@@ -153,6 +150,14 @@ _2amodule_2a["chunk-by-header"] = chunk_by_header
 --[[ (chunk-by-header (fn [item] (= item 2)) [1 2 3 4 5 6 7 2 8 9 2 0]) ]]--
 --[[ (chunk-by-header (fn [item] (= item 2)) [2 3 2 5]) ]]--
 --[[ (chunk-by-header (fn [item] (= item 2)) [2 2]) ]]--
+local function take_last_matching_chunk(chunk_boundary_fn, chunk_match_fn, li)
+  return a.last(a.filter(chunk_match_fn, chunk_by_header(chunk_boundary_fn, li)))
+end
+_2amodule_2a["take-last-matching-chunk"] = take_last_matching_chunk
+--[[ (take-last-matching-chunk (fn [item] (= item 2)) [1 2 3 4 5 6 7 2 8 9 2 0 2]) ]]--
+--[[ (take-last-matching-chunk (fn [item] (= item 2)) [1 2 3 4 5 6 7 2 8 9 2 0]) ]]--
+--[[ (take-last-matching-chunk (fn [item] (= item 2)) [2 3 2 5]) ]]--
+--[[ (take-last-matching-chunk (fn [item] (= item 2)) [2 2]) ]]--
 local function to_chunks(lines)
   local function _12_(_241)
     return execution_separator_3f(_241)
@@ -213,15 +218,11 @@ _2amodule_2a["filter-test-outputs"] = filter_test_outputs
 --[[ (filter-test-outputs namespace-testsuite) ]]--
 --[[ (filter-test-outputs ok-testsuite) ]]--
 --[[ (filter-test-outputs (a.concat namespace-testsuite ok-testsuite)) ]]--
-local function reduce_reverse(f, init, xs)
-  local function _13_(a0, b)
-    return f(b, a0)
-  end
-  return a.reduce(_13_, init, xs)
-end
-_2amodule_2a["reduce-reverse"] = reduce_reverse
 local function first_error_jump(test_result_chunk)
   local output
+  local function _13_(out, item)
+    return a.merge(item, out)
+  end
   local function _14_(line)
     if ("string" == type(line)) then
       local failure_line_details = failure_file_line(line)
@@ -230,7 +231,7 @@ local function first_error_jump(test_result_chunk)
       return nil
     end
   end
-  output = reduce_reverse(a.merge, {}, a.map(_14_, test_result_chunk))
+  output = a.reduce(_13_, {}, a.map(_14_, test_result_chunk))
   if a.get(output, "failed-line") then
     return output
   else
