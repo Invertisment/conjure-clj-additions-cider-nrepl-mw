@@ -3,6 +3,7 @@
               extract conjure.extract
               nrepl-action conjure.client.clojure.nrepl.action
               action conjure.client.clojure.nrepl.action
+              eval conjure.eval
               a conjure.aniseed.core}})
 
 (defn run-test-ns-tests! []
@@ -12,10 +13,11 @@
       (nrepl-action.run-alternate-ns-tests))))
 
 (defn remove-ns! []
-  (action.eval-str "(remove-ns (symbol (str *ns*)))"))
+  (eval.eval-str {:code "(remove-ns (symbol (str *ns*)))"
+                  :origin :remove-ns}))
 
-(defn cleanup-ns! [opts]
-  (action.eval-str
+(defn cleanup-ns! []
+  (eval.command
     (..
       ;; Cleanup a namespace
       ;; https://www.reddit.com/r/Clojure/comments/rq51mg/comment/hq9gfk6/?utm_source=reddit&utm_medium=web2x&context=3
@@ -28,4 +30,5 @@
       "         (remove (fn [[_ v]] (.startsWith (str v) \"#'clojure.core/\")))"
       "         (map key)"
       "         (run! #(try (ns-unmap ns %) (catch Throwable _))))))"
-      "   (symbol (str *ns*)))")))
+      "   (symbol (str *ns*)))")
+    ))

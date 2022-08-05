@@ -11,9 +11,10 @@ do
   _2amodule_locals_2a = (_2amodule_2a)["aniseed/locals"]
 end
 local autoload = (require("conjure-additions.aniseed.autoload")).autoload
-local a, action, extract, nrepl_action, text = autoload("conjure.aniseed.core"), autoload("conjure.client.clojure.nrepl.action"), autoload("conjure.extract"), autoload("conjure.client.clojure.nrepl.action"), autoload("conjure.text")
+local a, action, eval, extract, nrepl_action, text = autoload("conjure.aniseed.core"), autoload("conjure.client.clojure.nrepl.action"), autoload("conjure.eval"), autoload("conjure.extract"), autoload("conjure.client.clojure.nrepl.action"), autoload("conjure.text")
 do end (_2amodule_locals_2a)["a"] = a
 _2amodule_locals_2a["action"] = action
+_2amodule_locals_2a["eval"] = eval
 _2amodule_locals_2a["extract"] = extract
 _2amodule_locals_2a["nrepl-action"] = nrepl_action
 _2amodule_locals_2a["text"] = text
@@ -27,11 +28,11 @@ local function run_test_ns_tests_21()
 end
 _2amodule_2a["run-test-ns-tests!"] = run_test_ns_tests_21
 local function remove_ns_21()
-  return action["eval-str"]("(remove-ns (symbol (str *ns*)))")
+  return eval["eval-str"]({code = "(remove-ns (symbol (str *ns*)))", origin = "remove-ns"})
 end
 _2amodule_2a["remove-ns!"] = remove_ns_21
-local function cleanup_ns_21(opts)
-  return action["eval-str"](("((fn clenaup-ns [ns-sym]" .. "  (when-let [ns (find-ns ns-sym)]" .. "    (run! #(try (ns-unalias ns %) (catch Throwable _)) (keys (ns-aliases ns)))" .. "    (run! #(try (ns-unmap ns %)   (catch Throwable _)) (keys (ns-interns ns)))" .. "    (->> (ns-refers ns)" .. "         (remove (fn [[_ v]] (.startsWith (str v) \"#'clojure.core/\")))" .. "         (map key)" .. "         (run! #(try (ns-unmap ns %) (catch Throwable _))))))" .. "   (symbol (str *ns*)))"))
+local function cleanup_ns_21()
+  return eval.command(("((fn clenaup-ns [ns-sym]" .. "  (when-let [ns (find-ns ns-sym)]" .. "    (run! #(try (ns-unalias ns %) (catch Throwable _)) (keys (ns-aliases ns)))" .. "    (run! #(try (ns-unmap ns %)   (catch Throwable _)) (keys (ns-interns ns)))" .. "    (->> (ns-refers ns)" .. "         (remove (fn [[_ v]] (.startsWith (str v) \"#'clojure.core/\")))" .. "         (map key)" .. "         (run! #(try (ns-unmap ns %) (catch Throwable _))))))" .. "   (symbol (str *ns*)))"))
 end
 _2amodule_2a["cleanup-ns!"] = cleanup_ns_21
 return _2amodule_2a
