@@ -20,8 +20,9 @@
     {:silent true :noremap true}))
 
 (defn on-filetype []
-  (bind! "n" "<localleader>tf" :JumpToFirstCljTest :conjure-additions.jump :jump-to-last-failing-test!)
-  (provide-fn! :JumpToFirstCljTestRunTestNsTests :conjure-additions.additional-fns :run-test-ns-tests!)
+  ;;(bind! "n" "<localleader>tf" :ConjureAdditionsJumpToFailingCljTest :conjure-additions.jump :jump-to-last-failing-test!)
+  (provide-fn! :ConjureAdditionsJumpToFailingCljTest :conjure-additions.jump :jump-to-last-failing-test!)
+  (provide-fn! :ConjureAdditionsRunTestsInTestNs :conjure-additions.additional-fns :run-test-ns-tests!)
   )
 
 (defn init-mappings! []
