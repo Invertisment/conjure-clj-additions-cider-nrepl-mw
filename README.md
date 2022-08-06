@@ -10,6 +10,7 @@ Provides these additional functions to bind to your wanted keys:
 ```
 
 It's based on [Conjure](https://github.com/Olical/conjure/) and requires it to operate (strongly coupled, parses the log output).
+Mostly useful when editing Clojure.
 
 ### `ConjureAdditionsJumpToFailingCljTest`
 This function allows finding first failing test when executing tests.
