@@ -3,7 +3,8 @@
              extract conjure.extract
              nrepl-action conjure.client.clojure.nrepl.action
              eval conjure.eval
-             a conjure.aniseed.core}})
+             a conjure.aniseed.core
+             server conjure.client.clojure.nrepl.server}})
 
 (defn run-test-ns-tests! []
   (let [current-ns (extract.context)]
@@ -28,5 +29,21 @@
       "         (remove (fn [[_ v]] (.startsWith (str v) \"#'clojure.core/\")))"
       "         (map key)"
       "         (run! #(try (ns-unmap ns %) (catch Throwable _))))))"
-      "   (symbol (str *ns*)))")
-    ))
+      "   (symbol (str *ns*)))")))
+
+(defn print-last-test-result! []
+  ;;(server.with-conn-and-ops-or-warn
+  ;;  [:complete :completions]
+  ;;  (fn [conn ops]
+  ;;    (server.send
+  ;;      (if))))
+  )
+
+(defn retest! []
+  (server.with-conn-and-ops-or-warn
+    [:retest]
+    (fn [conn ops]
+      (server.send
+        {:op :retest
+         :session conn.session
+         :ns opts.context}))))

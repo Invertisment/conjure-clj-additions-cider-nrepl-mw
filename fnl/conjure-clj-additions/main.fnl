@@ -13,6 +13,8 @@
   (provide-fn! :ConjureAdditionsJumpToFailingCljTest :conjure-clj-additions.jump :jump-to-last-failing-test!)
   (provide-fn! :ConjureAdditionsRunTestsInTestNs :conjure-clj-additions.additional-fns :run-test-ns-tests!)
 
+  (provide-fn! :ConjureAdditionsRunTestsRetest :conjure-clj-additions.additional-fns :retest!)
+
   (provide-fn! :ConjureAdditionsNsRemove :conjure-clj-additions.additional-fns :remove-ns!)
   (provide-fn! :ConjureAdditionsNsCleanup :conjure-clj-additions.additional-fns :cleanup-ns!)
   )

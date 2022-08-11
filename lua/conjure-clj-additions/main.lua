@@ -22,6 +22,7 @@ _2amodule_2a["provide-fn!"] = provide_fn_21
 local function on_filetype()
   provide_fn_21("ConjureAdditionsJumpToFailingCljTest", "conjure-clj-additions.jump", "jump-to-last-failing-test!")
   provide_fn_21("ConjureAdditionsRunTestsInTestNs", "conjure-clj-additions.additional-fns", "run-test-ns-tests!")
+  provide_fn_21("ConjureAdditionsRunTestsRetest", "conjure-clj-additions.additional-fns", "retest!")
   provide_fn_21("ConjureAdditionsNsRemove", "conjure-clj-additions.additional-fns", "remove-ns!")
   return provide_fn_21("ConjureAdditionsNsCleanup", "conjure-clj-additions.additional-fns", "cleanup-ns!")
 end

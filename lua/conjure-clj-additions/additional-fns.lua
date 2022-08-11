@@ -11,11 +11,12 @@ do
   _2amodule_locals_2a = (_2amodule_2a)["aniseed/locals"]
 end
 local autoload = (require("conjure-clj-additions.aniseed.autoload")).autoload
-local a, eval, extract, nrepl_action, text = autoload("conjure.aniseed.core"), autoload("conjure.eval"), autoload("conjure.extract"), autoload("conjure.client.clojure.nrepl.action"), autoload("conjure.text")
+local a, eval, extract, nrepl_action, server, text = autoload("conjure.aniseed.core"), autoload("conjure.eval"), autoload("conjure.extract"), autoload("conjure.client.clojure.nrepl.action"), autoload("conjure.client.clojure.nrepl.server"), autoload("conjure.text")
 do end (_2amodule_locals_2a)["a"] = a
 _2amodule_locals_2a["eval"] = eval
 _2amodule_locals_2a["extract"] = extract
 _2amodule_locals_2a["nrepl-action"] = nrepl_action
+_2amodule_locals_2a["server"] = server
 _2amodule_locals_2a["text"] = text
 local function run_test_ns_tests_21()
   local current_ns = extract.context()
@@ -34,4 +35,14 @@ local function cleanup_ns_21()
   return eval.command(("((fn clenaup-ns [ns-sym]" .. "  (when-let [ns (find-ns ns-sym)]" .. "    (run! #(try (ns-unalias ns %) (catch Throwable _)) (keys (ns-aliases ns)))" .. "    (run! #(try (ns-unmap ns %)   (catch Throwable _)) (keys (ns-interns ns)))" .. "    (->> (ns-refers ns)" .. "         (remove (fn [[_ v]] (.startsWith (str v) \"#'clojure.core/\")))" .. "         (map key)" .. "         (run! #(try (ns-unmap ns %) (catch Throwable _))))))" .. "   (symbol (str *ns*)))"))
 end
 _2amodule_2a["cleanup-ns!"] = cleanup_ns_21
+local function print_last_test_result_21()
+end
+_2amodule_2a["print-last-test-result!"] = print_last_test_result_21
+local function retest_21()
+  local function _2_(conn, ops)
+    return server.send({op = "retest", session = conn.session, ns = opts.context})
+  end
+  return server["with-conn-and-ops-or-warn"]({"retest"}, _2_)
+end
+_2amodule_2a["retest!"] = retest_21
 return _2amodule_2a
