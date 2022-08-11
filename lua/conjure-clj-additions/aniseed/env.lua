@@ -1,5 +1,5 @@
 local _2afile_2a = "fnl/aniseed/env.fnl"
-local _2amodule_name_2a = "conjure-additions.aniseed.env"
+local _2amodule_name_2a = "conjure-clj-additions.aniseed.env"
 local _2amodule_2a
 do
   package.loaded[_2amodule_name_2a] = {}
@@ -10,8 +10,8 @@ do
   _2amodule_2a["aniseed/locals"] = {}
   _2amodule_locals_2a = (_2amodule_2a)["aniseed/locals"]
 end
-local autoload = (require("conjure-additions.aniseed.autoload")).autoload
-local compile, fennel, fs, nvim = autoload("conjure-additions.aniseed.compile"), autoload("conjure-additions.aniseed.fennel"), autoload("conjure-additions.aniseed.fs"), autoload("conjure-additions.aniseed.nvim")
+local autoload = (require("conjure-clj-additions.aniseed.autoload")).autoload
+local compile, fennel, fs, nvim = autoload("conjure-clj-additions.aniseed.compile"), autoload("conjure-clj-additions.aniseed.fennel"), autoload("conjure-clj-additions.aniseed.fs"), autoload("conjure-clj-additions.aniseed.nvim")
 do end (_2amodule_locals_2a)["compile"] = compile
 _2amodule_locals_2a["fennel"] = fennel
 _2amodule_locals_2a["fs"] = fs

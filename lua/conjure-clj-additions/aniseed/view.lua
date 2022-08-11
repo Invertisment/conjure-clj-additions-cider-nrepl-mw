@@ -1,5 +1,5 @@
 local _2afile_2a = "fnl/aniseed/view.fnl"
-local _2amodule_name_2a = "conjure-additions.aniseed.view"
+local _2amodule_name_2a = "conjure-clj-additions.aniseed.view"
 local _2amodule_2a
 do
   package.loaded[_2amodule_name_2a] = {}
@@ -10,7 +10,7 @@ do
   _2amodule_2a["aniseed/locals"] = {}
   _2amodule_locals_2a = (_2amodule_2a)["aniseed/locals"]
 end
-local fnl = require("conjure-additions.aniseed.fennel")
+local fnl = require("conjure-clj-additions.aniseed.fennel")
 do end (_2amodule_locals_2a)["fnl"] = fnl
 local function serialise(...)
   return fnl.impl().view(...)

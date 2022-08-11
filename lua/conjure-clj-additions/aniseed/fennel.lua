@@ -1,5 +1,5 @@
 local _2afile_2a = "fnl/aniseed/fennel.fnl"
-local _2amodule_name_2a = "conjure-additions.aniseed.fennel"
+local _2amodule_name_2a = "conjure-clj-additions.aniseed.fennel"
 local _2amodule_2a
 do
   package.loaded[_2amodule_name_2a] = {}
@@ -10,8 +10,8 @@ do
   _2amodule_2a["aniseed/locals"] = {}
   _2amodule_locals_2a = (_2amodule_2a)["aniseed/locals"]
 end
-local autoload = (require("conjure-additions.aniseed.autoload")).autoload
-local a, fs, nvim, str = autoload("conjure-additions.aniseed.core"), autoload("conjure-additions.aniseed.fs"), autoload("conjure-additions.aniseed.nvim"), autoload("conjure-additions.aniseed.string")
+local autoload = (require("conjure-clj-additions.aniseed.autoload")).autoload
+local a, fs, nvim, str = autoload("conjure-clj-additions.aniseed.core"), autoload("conjure-clj-additions.aniseed.fs"), autoload("conjure-clj-additions.aniseed.nvim"), autoload("conjure-clj-additions.aniseed.string")
 do end (_2amodule_locals_2a)["a"] = a
 _2amodule_locals_2a["fs"] = fs
 _2amodule_locals_2a["nvim"] = nvim
@@ -37,7 +37,7 @@ _2amodule_2a["sync-rtp"] = sync_rtp
 local state = {["compiler-loaded?"] = false}
 _2amodule_locals_2a["state"] = state
 local function impl()
-  local compiler = require("conjure-additions.aniseed.deps.fennel")
+  local compiler = require("conjure-clj-additions.aniseed.deps.fennel")
   if not state["compiler-loaded?"] then
     state["compiler-loaded?"] = true
     sync_rtp(compiler)

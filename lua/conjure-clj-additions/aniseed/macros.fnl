@@ -129,7 +129,7 @@
 
       ;; Only require autoload if it's used.
       (when (contains? mod-fns autoload-sym)
-        (table.insert result `(local ,autoload-sym (. (require "conjure-additions.aniseed.autoload") :autoload)))))
+        (table.insert result `(local ,autoload-sym (. (require "conjure-clj-additions.aniseed.autoload") :autoload)))))
 
     ;; When we have some keys insert the key/vals pairs locals.
     ;; If this is empty we end up generating invalid Lua.

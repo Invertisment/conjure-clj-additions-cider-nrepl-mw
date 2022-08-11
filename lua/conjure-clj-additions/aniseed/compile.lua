@@ -1,5 +1,5 @@
 local _2afile_2a = "fnl/aniseed/compile.fnl"
-local _2amodule_name_2a = "conjure-additions.aniseed.compile"
+local _2amodule_name_2a = "conjure-clj-additions.aniseed.compile"
 local _2amodule_2a
 do
   package.loaded[_2amodule_name_2a] = {}
@@ -10,14 +10,14 @@ do
   _2amodule_2a["aniseed/locals"] = {}
   _2amodule_locals_2a = (_2amodule_2a)["aniseed/locals"]
 end
-local autoload = (require("conjure-additions.aniseed.autoload")).autoload
-local a, fennel, fs, nvim = autoload("conjure-additions.aniseed.core"), autoload("conjure-additions.aniseed.fennel"), autoload("conjure-additions.aniseed.fs"), autoload("conjure-additions.aniseed.nvim")
+local autoload = (require("conjure-clj-additions.aniseed.autoload")).autoload
+local a, fennel, fs, nvim = autoload("conjure-clj-additions.aniseed.core"), autoload("conjure-clj-additions.aniseed.fennel"), autoload("conjure-clj-additions.aniseed.fs"), autoload("conjure-clj-additions.aniseed.nvim")
 do end (_2amodule_locals_2a)["a"] = a
 _2amodule_locals_2a["fennel"] = fennel
 _2amodule_locals_2a["fs"] = fs
 _2amodule_locals_2a["nvim"] = nvim
 local function wrap_macros(code, opts)
-  local macros_module = "conjure-additions.aniseed.macros"
+  local macros_module = "conjure-clj-additions.aniseed.macros"
   local filename
   do
     local _1_ = a.get(opts, "filename")

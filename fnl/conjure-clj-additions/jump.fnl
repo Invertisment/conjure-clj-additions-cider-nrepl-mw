@@ -1,4 +1,4 @@
-(module conjure-additions.jump
+(module conjure-clj-additions.jump
   { autoload {nvim conjure.aniseed.nvim
               str conjure.aniseed.string
               client conjure.client

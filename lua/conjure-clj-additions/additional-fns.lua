@@ -1,5 +1,5 @@
-local _2afile_2a = "fnl/conjure-additions/additional-fns.fnl"
-local _2amodule_name_2a = "conjure-additions.additional-fns"
+local _2afile_2a = "fnl/conjure-clj-additions/additional-fns.fnl"
+local _2amodule_name_2a = "conjure-clj-additions.additional-fns"
 local _2amodule_2a
 do
   package.loaded[_2amodule_name_2a] = {}
@@ -10,10 +10,9 @@ do
   _2amodule_2a["aniseed/locals"] = {}
   _2amodule_locals_2a = (_2amodule_2a)["aniseed/locals"]
 end
-local autoload = (require("conjure-additions.aniseed.autoload")).autoload
-local a, action, eval, extract, nrepl_action, text = autoload("conjure.aniseed.core"), autoload("conjure.client.clojure.nrepl.action"), autoload("conjure.eval"), autoload("conjure.extract"), autoload("conjure.client.clojure.nrepl.action"), autoload("conjure.text")
+local autoload = (require("conjure-clj-additions.aniseed.autoload")).autoload
+local a, eval, extract, nrepl_action, text = autoload("conjure.aniseed.core"), autoload("conjure.eval"), autoload("conjure.extract"), autoload("conjure.client.clojure.nrepl.action"), autoload("conjure.text")
 do end (_2amodule_locals_2a)["a"] = a
-_2amodule_locals_2a["action"] = action
 _2amodule_locals_2a["eval"] = eval
 _2amodule_locals_2a["extract"] = extract
 _2amodule_locals_2a["nrepl-action"] = nrepl_action

@@ -1,10 +1,9 @@
-(module conjure-additions.additional-fns
-  { autoload {text conjure.text
-              extract conjure.extract
-              nrepl-action conjure.client.clojure.nrepl.action
-              action conjure.client.clojure.nrepl.action
-              eval conjure.eval
-              a conjure.aniseed.core}})
+(module conjure-clj-additions.additional-fns
+  {autoload {text conjure.text
+             extract conjure.extract
+             nrepl-action conjure.client.clojure.nrepl.action
+             eval conjure.eval
+             a conjure.aniseed.core}})
 
 (defn run-test-ns-tests! []
   (let [current-ns (extract.context)]
