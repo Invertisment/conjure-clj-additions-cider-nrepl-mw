@@ -73,14 +73,22 @@ local function load_test_middleware_21()
   return server["with-conn-and-ops-or-warn"]({"add-middleware"}, _3_)
 end
 _2amodule_2a["load-test-middleware!"] = load_test_middleware_21
-local function nrepl_test_21(test_selector)
+local function nrepl_test_21(test_selector, printable_info)
+  nvim.echo("...")
+  log.append({("; Running tests in " .. printable_info)}, {["break?"] = true, ["suppress-hud?"] = true})
   local function _5_(conn, ops)
     local function _6_(response)
       local results = a.get(response, "results")
       local unwrapped_results = display.unwrap(results)
       if results then
         own_state["put-unwrapped-test-results!"](unwrapped_results)
-        return log.append(display["unwrapped-results->to-lines"](unwrapped_results), {["break?"] = true})
+        local lines = display["unwrapped-results->to-lines"](unwrapped_results)
+        if (0 == a.count(lines)) then
+          nvim.echo("Tests passed")
+          return log.append({"; Tests passed"}, {["suppress-hud?"] = true})
+        else
+          return log.append(lines, {["break?"] = true})
+        end
       else
         return nil
       end
@@ -91,7 +99,8 @@ local function nrepl_test_21(test_selector)
 end
 _2amodule_2a["nrepl-test!"] = nrepl_test_21
 local function nrepl_middleware_run_test_ns_tests_21()
-  return nrepl_test_21({op = "test-var-query", ["var-query"] = {["ns-query"] = {exactly = {get_test_ns_name_21()}}}})
+  local test_ns = get_test_ns_name_21()
+  return nrepl_test_21({op = "test-var-query", ["var-query"] = {["ns-query"] = {exactly = {test_ns}}}}, test_ns)
 end
 _2amodule_2a["nrepl-middleware-run-test-ns-tests!"] = nrepl_middleware_run_test_ns_tests_21
 local function run_test_ns_tests_21()
@@ -108,8 +117,9 @@ local function nrepl_run_current_test_21()
   if form then
     local test_ns = get_test_ns_name_21()
     local test_name = nrepl_action["extract-test-name-from-form"](form.content)
+    local printable_info = (test_ns .. "/" .. test_name)
     if test_name then
-      return nrepl_test_21({op = "test-var-query", ["var-query"] = {["ns-query"] = {exactly = {test_ns}}, exactly = {(test_ns .. "/" .. test_name)}}})
+      return nrepl_test_21({op = "test-var-query", ["var-query"] = {["ns-query"] = {exactly = {test_ns}}, exactly = {(test_ns .. "/" .. test_name)}}}, printable_info)
     else
       return nil
     end

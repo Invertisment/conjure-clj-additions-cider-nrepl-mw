@@ -72,7 +72,11 @@
           ;; This saves the `wrap-test` middleware so that with-conn-and-ops-or-warn would work
           (capture-describe!))))))
 
-(defn nrepl-test! [test-selector]
+(defn nrepl-test! [test-selector printable-info]
+  (nvim.echo "...")
+  (log.append [(.. "; Running tests in " printable-info)]
+              {:break? true
+               :suppress-hud? true})
   (server.with-conn-and-ops-or-warn
     [:test :test-var-query]
     (fn [conn ops]
@@ -83,12 +87,19 @@
             (let [unwrapped-results (display.unwrap results)]
               (when results
                 (own-state.put-unwrapped-test-results! unwrapped-results)
-                (log.append (display.unwrapped-results->to-lines unwrapped-results) {:break? true})))))))))
+                (let [lines (display.unwrapped-results->to-lines unwrapped-results)]
+                  (if (= 0 (a.count lines))
+                    (do
+                      (nvim.echo "Tests passed")
+                      (log.append ["; Tests passed"] {:suppress-hud? true}))
+                    (log.append lines {:break? true})))))))))))
 
 (defn nrepl-middleware-run-test-ns-tests! []
-  (nrepl-test!
-    {:op :test-var-query
-     :var-query {:ns-query {:exactly [(get-test-ns-name!)]}}}))
+  (let [test-ns (get-test-ns-name!)]
+    (nrepl-test!
+      {:op :test-var-query
+       :var-query {:ns-query {:exactly [test-ns]}}}
+      test-ns)))
 
 (defn run-test-ns-tests! []
   (let [current-ns (get-current-ns!)]
@@ -100,12 +111,14 @@
   (let [form (extract.form {:root? true})]
     (when form
       (let [test-ns (get-test-ns-name!)
-            test-name (nrepl-action.extract-test-name-from-form form.content)]
+            test-name (nrepl-action.extract-test-name-from-form form.content)
+            printable-info (.. test-ns "/" test-name)]
         (when test-name
           (nrepl-test!
             {:op :test-var-query
              :var-query {:ns-query {:exactly [test-ns]}
-                         :exactly [(.. test-ns "/" test-name)]}}))))))
+                         :exactly [(.. test-ns "/" test-name)]}}
+            printable-info))))))
 
 (defn nrepl-jump-to-nth-failing! []
   (jump.jump-to-buffer-and-line!
