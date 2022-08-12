@@ -1,22 +1,25 @@
 ## Conjure additions
 
-Provides two modes to jump to failing test and execute tests:
+Provides two modes to jump to failing test and execute tests (functions have to be mapped manually):
 1. Conjure's original mode -- limited jumping but more basic setup and doesn't require nREPL
 1. nREPL-based test runner -- no log parsing (faster in that part) but needs nREPL dependency in the project
 
-Provides these additional functions to bind to your wanted keys:
-
+Provides these additional helpers:
 ```
-:CcaRunTestsInTestNs          // Run tests from test ns regardless if you're in test or in main ns
-:CcaJumpToFailingCljTest      // Jump to first failed test
-:CcaNreplRunTestsInTestNs     // Run tests from test ns regardless if you're in test or in main ns
-:CcaNreplJumpToFailingCljTest // Jump to first failed test
-:CcaNsRemove                  // Run `remove-ns` on the current namespace
-:CcaNsCleanup                 // Clean current ns (doesn't break the ns that imports current ns)
+:CcaNsCleanup // Clean current ns (doesn't break the ns that imports current ns)
+:CcaNsRemove  // Run `remove-ns` on the current namespace
 ```
 
 It's based on [Conjure](https://github.com/Olical/conjure/) and requires it to operate (strongly coupled, parses the log output).
 Mostly useful when editing Clojure.
+
+## Conjure-based basic tests (run tests and output to log)
+
+You can use these functions to bind to your wanted keys:
+```
+:CcaRunTestsInTestNs     // Run tests from test ns regardless if you're in test or in main ns (doesn't parse exceptions)
+:CcaJumpToFailingCljTest // Jump to first failed test
+```
 
 ### `ccaJumpToFailingCljTest`
 This function allows finding first failing test when executing tests.
@@ -53,3 +56,30 @@ let g:conjure#client#clojure#nrepl#mapping#run_current_ns_tests = '🇺🇦'
 autocmd FileType clojure nnoremap <silent> <localleader>tn :JumpToFirstCljTestRunTestNsTests<CR>
 ```
 
+## nREPL-based tests
+
+These functions are provided to interact with nREPL session that will run the tests:
+```
+:CcaNreplRunTestsInTestNs     // Run tests from test ns regardless if you're in test or in main ns
+:CcaNreplRunCurrentTest       // Run testsuite under the cursor
+:CcaNreplJumpToFailingCljTest // Jump to first failed test
+```
+These functions are not compatible with Conjure config so Conjure's test execution mappings must be removed.
+They work similarly to the ones on the top but the output is driven from nREPL instead of being captured by hand.
+
+Example configuration:
+```
+let g:conjure#client#clojure#nrepl#mapping#run_alternate_ns_tests = '🇺🇦'
+let g:conjure#client#clojure#nrepl#mapping#run_current_ns_tests = '🇺🇦'
+let g:conjure#client#clojure#nrepl#mapping#run_current_test = '🇺🇦'
+autocmd FileType clojure nnoremap <silent> <localleader>tn :CcaNreplRunTestsInTestNs<CR>
+autocmd FileType clojure nnoremap <silent> <localleader>tf :CcaNreplJumpToFailingCljTest<CR>
+autocmd FileType clojure nnoremap <silent> <localleader>tc :CcaNreplRunCurrentTest<CR>
+" Not the original Conjure mapping but it's better to have it under the finger that you already pressed:
+"autocmd FileType clojure nnoremap <silent> <localleader>tt :CcaNreplRunCurrentTest<CR>
+```
+The plugin will print the test output and remember the last failed tests.
+It will not try to recover from switched REPL and you'll need to restart your editor as nREPL test middleware wouldn't be set.
+
+`CcaNreplJumpToFailingCljTest` also supports additional functionality to jump to nth test by typing a number before running the function.
+For instance if I bind this function to `<>tf` then I could press `2<>tf` to jump to the second failed test.
