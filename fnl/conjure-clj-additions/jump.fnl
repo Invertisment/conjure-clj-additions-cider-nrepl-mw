@@ -71,7 +71,7 @@
   ;; https://github.com/Olical/conjure/blob/2c42367fc301f3b38d1f25a68016eec59b834c1a/fnl/conjure/log.fnl#L32
   (str.join ["conjure-log-" (nvim.fn.getpid) (client.get :buf-suffix)]))
 
-(defn- upsert-buf [buf-name]
+(defn upsert-buf [buf-name]
   (buffer.upsert-hidden buf-name))
 
 (defn empty? [li]
@@ -226,16 +226,17 @@
 (comment (find-matching-buffer "core.core-test" sample-buffers))
 (comment (find-matching-buffer "core.core-test2" sample-buffers))
 (comment (find-matching-buffer "core.core-test" (get-buffers!)))
-(defn find-buffer-to-jump! []
-  (let [findings (first-error-jump (filter-test-outputs (conjure-log-buf-content!)))
-        failing-namespace (a.get findings :namespace)
+(defn find-buffer-to-jump! [findings]
+  (let [failing-namespace (a.get findings :namespace)
         failing-line (a.get findings :failed-line)]
     (if failing-namespace
       (a.merge (find-matching-buffer failing-namespace (get-buffers!)) findings)
       (when failing-line
         ;; TODO: could be nice to check it it's a test buffer
         (a.merge (get-current-buffer!) findings)))))
-(comment (find-buffer-to-jump!))
+(defn query-buffers-and-find-buffer-to-jump! []
+  (find-buffer-to-jump! (first-error-jump (filter-test-outputs (conjure-log-buf-content!)))))
+(comment (query-buffers-and-find-buffer-to-jump!))
 
 ;; vim commands https://github.com/norcalli/nvim.lua
 ;;vim.api.nvim_command("w")
@@ -250,7 +251,7 @@
   (vim.api.nvim_command "call search('[^ \t]')"))
 
 (defn jump! [buffer-and-line-info]
-  (let [buffer-id (a.get buffer-and-line-info :buffer-id)
+  (let [;buffer-id (a.get buffer-and-line-info :buffer-id)
         buffer-name (a.get buffer-and-line-info :buffer-name)
         failed-line (a.get buffer-and-line-info :failed-line)]
     (go-to-line! buffer-name failed-line)
@@ -267,9 +268,11 @@
                  :namespace "core.core-test"
                  :suite-name "my-failing-testsuite"}))
 
+(defn jump-to-buffer-and-line! [to-jump]
+  (if to-jump
+    (jump! to-jump)
+    (nvim.echo "No tests to jump to")))
+
 (defn jump-to-last-failing-test! []
-  (let [to-jump (find-buffer-to-jump!)]
-    (if to-jump
-      (jump! to-jump)
-      (nvim.echo "No tests to jump to"))))
+  (jump-to-buffer-and-line! (query-buffers-and-find-buffer-to-jump!)))
 (comment (jump-to-last-failing-test!))

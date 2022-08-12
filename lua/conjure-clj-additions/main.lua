@@ -10,9 +10,10 @@ do
   _2amodule_2a["aniseed/locals"] = {}
   _2amodule_locals_2a = (_2amodule_2a)["aniseed/locals"]
 end
-local bridge, config, nvim, str = require("conjure.bridge"), require("conjure.config"), require("conjure.aniseed.nvim"), require("conjure.aniseed.string")
+local bridge, config, fns, nvim, str = require("conjure.bridge"), require("conjure.config"), require("conjure-clj-additions.additional-fns"), require("conjure.aniseed.nvim"), require("conjure.aniseed.string")
 do end (_2amodule_locals_2a)["bridge"] = bridge
 _2amodule_locals_2a["config"] = config
+_2amodule_locals_2a["fns"] = fns
 _2amodule_locals_2a["nvim"] = nvim
 _2amodule_locals_2a["str"] = str
 local function provide_fn_21(fn_name, ns, f)
@@ -20,11 +21,13 @@ local function provide_fn_21(fn_name, ns, f)
 end
 _2amodule_2a["provide-fn!"] = provide_fn_21
 local function on_filetype()
-  provide_fn_21("ConjureAdditionsJumpToFailingCljTest", "conjure-clj-additions.jump", "jump-to-last-failing-test!")
-  provide_fn_21("ConjureAdditionsRunTestsInTestNs", "conjure-clj-additions.additional-fns", "run-test-ns-tests!")
-  provide_fn_21("ConjureAdditionsRunTestsRetest", "conjure-clj-additions.additional-fns", "retest!")
-  provide_fn_21("ConjureAdditionsNsRemove", "conjure-clj-additions.additional-fns", "remove-ns!")
-  return provide_fn_21("ConjureAdditionsNsCleanup", "conjure-clj-additions.additional-fns", "cleanup-ns!")
+  provide_fn_21("CcaRunTestsInTestNs", "conjure-clj-additions.additional-fns", "run-test-ns-tests!")
+  provide_fn_21("CcaJumpToFailingCljTest", "conjure-clj-additions.additional-fns", "jump-to-first-failing!")
+  provide_fn_21("CcaNreplRunTestsInTestNs", "conjure-clj-additions.additional-fns", "nrepl-middleware-run-test-ns-tests!")
+  provide_fn_21("CcaNreplRunCurrentTest", "conjure-clj-additions.additional-fns", "nrepl-run-current-test!")
+  provide_fn_21("CcaNreplJumpToFailingCljTest", "conjure-clj-additions.additional-fns", "nrepl-jump-to-first-failing!")
+  provide_fn_21("CcaNsRemove", "conjure-clj-additions.additional-fns", "remove-ns!")
+  return provide_fn_21("CcaNsCleanup", "conjure-clj-additions.additional-fns", "cleanup-ns!")
 end
 _2amodule_2a["on-filetype"] = on_filetype
 local function init_mappings_21()
@@ -35,6 +38,7 @@ local function init_mappings_21()
 end
 _2amodule_2a["init-mappings!"] = init_mappings_21
 local function init()
+  fns["load-test-middleware!"]()
   return init_mappings_21()
 end
 _2amodule_2a["init"] = init

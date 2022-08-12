@@ -2,7 +2,8 @@
   {require {nvim conjure.aniseed.nvim
             str conjure.aniseed.string
             bridge conjure.bridge
-            config conjure.config}})
+            config conjure.config
+            fns conjure-clj-additions.additional-fns}})
 
 (defn provide-fn! [fn-name ns f]
   (nvim.ex.command_
@@ -10,13 +11,19 @@
     (bridge.viml->lua ns f {})))
 
 (defn on-filetype []
-  (provide-fn! :ConjureAdditionsJumpToFailingCljTest :conjure-clj-additions.jump :jump-to-last-failing-test!)
-  (provide-fn! :ConjureAdditionsRunTestsInTestNs :conjure-clj-additions.additional-fns :run-test-ns-tests!)
+  ;; log-parsing functions (based on original way Conjure does things on its own)
+  (provide-fn! :CcaRunTestsInTestNs :conjure-clj-additions.additional-fns :run-test-ns-tests!)
+  (provide-fn! :CcaJumpToFailingCljTest :conjure-clj-additions.additional-fns :jump-to-first-failing!)
 
-  (provide-fn! :ConjureAdditionsRunTestsRetest :conjure-clj-additions.additional-fns :retest!)
+  ;; nrepl-based functions
+  (provide-fn! :CcaNreplRunTestsInTestNs :conjure-clj-additions.additional-fns :nrepl-middleware-run-test-ns-tests!)
+  (provide-fn! :CcaNreplRunCurrentTest :conjure-clj-additions.additional-fns :nrepl-run-current-test!)
+  (provide-fn! :CcaNreplJumpToFailingCljTest :conjure-clj-additions.additional-fns :nrepl-jump-to-first-failing!)
+  ;todo (provide-fn! :ConjureAdditionsRunTestsRetest :conjure-clj-additions.additional-fns :retest!)
 
-  (provide-fn! :ConjureAdditionsNsRemove :conjure-clj-additions.additional-fns :remove-ns!)
-  (provide-fn! :ConjureAdditionsNsCleanup :conjure-clj-additions.additional-fns :cleanup-ns!)
+  ;; util
+  (provide-fn! :CcaNsRemove :conjure-clj-additions.additional-fns :remove-ns!)
+  (provide-fn! :CcaNsCleanup :conjure-clj-additions.additional-fns :cleanup-ns!)
   )
 
 (defn init-mappings! []
@@ -28,4 +35,5 @@
   (nvim.ex.augroup :END))
 
 (defn init []
+  (fns.load-test-middleware!)
   (init-mappings!))

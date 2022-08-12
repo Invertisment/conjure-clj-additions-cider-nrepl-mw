@@ -114,7 +114,7 @@ _2amodule_2a["conjure-log-buf-name"] = conjure_log_buf_name
 local function upsert_buf(buf_name)
   return buffer["upsert-hidden"](buf_name)
 end
-_2amodule_locals_2a["upsert-buf"] = upsert_buf
+_2amodule_2a["upsert-buf"] = upsert_buf
 local function empty_3f(li)
   return (0 == #li)
 end
@@ -280,8 +280,7 @@ _2amodule_2a["find-matching-buffer"] = find_matching_buffer
 --[[ (find-matching-buffer "core.core-test" sample-buffers) ]]--
 --[[ (find-matching-buffer "core.core-test2" sample-buffers) ]]--
 --[[ (find-matching-buffer "core.core-test" (get-buffers!)) ]]--
-local function find_buffer_to_jump_21()
-  local findings = first_error_jump(filter_test_outputs(conjure_log_buf_content_21()))
+local function find_buffer_to_jump_21(findings)
   local failing_namespace = a.get(findings, "namespace")
   local failing_line = a.get(findings, "failed-line")
   if failing_namespace then
@@ -295,7 +294,11 @@ local function find_buffer_to_jump_21()
   end
 end
 _2amodule_2a["find-buffer-to-jump!"] = find_buffer_to_jump_21
---[[ (find-buffer-to-jump!) ]]--
+local function query_buffers_and_find_buffer_to_jump_21()
+  return find_buffer_to_jump_21(first_error_jump(filter_test_outputs(conjure_log_buf_content_21())))
+end
+_2amodule_2a["query-buffers-and-find-buffer-to-jump!"] = query_buffers_and_find_buffer_to_jump_21
+--[[ (query-buffers-and-find-buffer-to-jump!) ]]--
 local function go_to_line_21(buffer_name, line)
   return editor["go-to"](buffer_name, line, 1)
 end
@@ -306,7 +309,6 @@ local function go_to_first_readable_char_21(buffer_id)
 end
 _2amodule_2a["go-to-first-readable-char!"] = go_to_first_readable_char_21
 local function jump_21(buffer_and_line_info)
-  local buffer_id = a.get(buffer_and_line_info, "buffer-id")
   local buffer_name = a.get(buffer_and_line_info, "buffer-name")
   local failed_line = a.get(buffer_and_line_info, "failed-line")
   return go_to_line_21(buffer_name, failed_line)
@@ -322,13 +324,16 @@ _2amodule_2a["jump!"] = jump_21
  :failed-line 270
  :namespace "core.core-test"
  :suite-name "my-failing-testsuite"}) ]]--
-local function jump_to_last_failing_test_21()
-  local to_jump = find_buffer_to_jump_21()
+local function jump_to_buffer_and_line_21(to_jump)
   if to_jump then
     return jump_21(to_jump)
   else
     return nvim.echo("No tests to jump to")
   end
+end
+_2amodule_2a["jump-to-buffer-and-line!"] = jump_to_buffer_and_line_21
+local function jump_to_last_failing_test_21()
+  return jump_to_buffer_and_line_21(query_buffers_and_find_buffer_to_jump_21())
 end
 _2amodule_2a["jump-to-last-failing-test!"] = jump_to_last_failing_test_21
 --[[ (jump-to-last-failing-test!) ]]--
