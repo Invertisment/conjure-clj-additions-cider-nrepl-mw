@@ -63,17 +63,19 @@ end
 _2amodule_2a["display-result"] = display_result
 local function display_suite_sym(result_type, ns, suite_sym, line, text)
   if line then
-    return (ns .. "/" .. suite_sym .. ":" .. line .. " \"" .. text .. "\" ;;" .. result_type)
+    return (ns .. "/" .. suite_sym .. ":" .. line .. " \"" .. text .. "\" " .. result_type)
   else
-    return (ns .. "/" .. suite_sym .. " \"" .. text .. "\" ;;" .. result_type)
+    return (ns .. "/" .. suite_sym .. " \"" .. text .. "\" " .. result_type)
   end
 end
 _2amodule_2a["display-suite-sym"] = display_suite_sym
-local function display_suite_result(ns, suite_sym, suite_result)
-  return a.concat({"", display_suite_sym(a.get(suite_result, "type"), ns, suite_sym, a.get(suite_result, "line"), a.get(suite_result, "context"))}, display_result("  Expected:", suite_result, "expected"), display_result("  Actual:", suite_result, "actual"), display_result("  Diff:", suite_result, "diffs"), display_result("  Error:", suite_result, "error"))
+local function display_suite_result(test_index, suite_result)
+  local ns = a.get(suite_result, "ns")
+  local suite_sym = a.get(suite_result, "var")
+  return a.concat({"", (a.str(test_index) .. ". " .. display_suite_sym(a.get(suite_result, "type"), ns, suite_sym, a.get(suite_result, "line"), a.get(suite_result, "context")))}, display_result("  Expected:", suite_result, "expected"), display_result("  Actual:", suite_result, "actual"), display_result("  Diff:", suite_result, "diffs"), display_result("  Error:", suite_result, "error"))
 end
 _2amodule_2a["display-suite-result"] = display_suite_result
---[[ (display-suite-result "ns" "qwe-test" (a.first (a.get-in test-result ["utils.my-test" "qwe-test"]))) ]]--
+--[[ (display-suite-result 99 (a.second (a.get-in test-result ["utils.my-test" "qwe-test"]))) ]]--
 local function pass_3f(suite_result)
   return ("pass" == a.get(suite_result, "type"))
 end
@@ -84,39 +86,48 @@ local function display_suite_header(suite_symbol)
 end
 _2amodule_2a["display-suite-header"] = display_suite_header
 --[[ (display-suite-header "qwe-test") ]]--
-local function display_suite_results(ns, suite_symbol, suite_results)
-  local function _5_(res, suite_result)
-    local function _6_()
-      if pass_3f(suite_result) then
-        return {}
-      else
-        return display_suite_result(ns, suite_symbol, suite_result)
-      end
-    end
-    return a.concat(res, _6_())
-  end
-  return a.reduce(_5_, {}, suite_results)
-end
-_2amodule_2a["display-suite-results"] = display_suite_results
---[[ (display-suite-results "ns" "qwe-test" (a.get-in test-result ["utils.my-test" "qwe-test"])) ]]--
 local function display_ns_header(ns)
   return ("  Namespace: " .. ns)
 end
 _2amodule_2a["display-ns-header"] = display_ns_header
 --[[ (display-ns-header "utils.my-test") ]]--
-local function display_ns_result(ns, ns_result)
+local function unwrap_suite_results(suite_results)
+  local function _5_(res, suite_result)
+    if pass_3f(suite_result) then
+      return res
+    else
+      return a.concat(res, {suite_result})
+    end
+  end
+  return a.reduce(_5_, {}, suite_results)
+end
+_2amodule_2a["unwrap-suite-results"] = unwrap_suite_results
+local function unwrap_ns_result(ns_result)
   local function _7_(res, suite_symbol)
-    return a.concat(res, display_suite_results(ns, suite_symbol, a["get-in"](ns_result, {suite_symbol})))
+    return a.concat(res, unwrap_suite_results(a.get(ns_result, suite_symbol)))
   end
   return a.reduce(_7_, {}, a.keys(ns_result))
 end
-_2amodule_2a["display-ns-result"] = display_ns_result
---[[ (display-ns-result "utils.my-test" (a.get-in test-result ["utils.my-test"])) ]]--
-local function to_lines(test_result)
-  local function _8_(lines, ns)
-    return a.concat(lines, display_ns_result(ns, a["get-in"](test_result, {ns})))
+_2amodule_2a["unwrap-ns-result"] = unwrap_ns_result
+local function unwrap(test_result)
+  local function _8_(unwrapped, ns)
+    return a.concat(unwrapped, unwrap_ns_result(a.get(test_result, ns)))
   end
   return a.reduce(_8_, {}, a.keys(test_result))
+end
+_2amodule_2a["unwrap"] = unwrap
+--[[ (unwrap test-result) ]]--
+local function unwrapped_results__3eto_lines(unwrapped_results)
+  local function _9_(iv)
+    local i = a.first(iv)
+    local v = a.second(iv)
+    return display_suite_result(i, v)
+  end
+  return a.mapcat(a.identity, a["map-indexed"](_9_, unwrapped_results))
+end
+_2amodule_2a["unwrapped-results->to-lines"] = unwrapped_results__3eto_lines
+local function to_lines(test_result)
+  return unwrapped_results__3eto_lines(unwrap(test_result))
 end
 _2amodule_2a["to-lines"] = to_lines
 --[[ (to-lines test-result) ]]--
@@ -125,19 +136,21 @@ local function first_value(map)
 end
 _2amodule_2a["first-value"] = first_value
 --[[ (first-value (first-value test-result)) ]]--
-local function first_failing_test(test_result)
-  local first_error
-  local function _9_(res)
-    return not pass_3f(res)
-  end
-  first_error = a.first(a.filter(_9_, first_value(first_value(test_result))))
-  if first_error then
-    local namespace = a.get(first_error, "ns")
-    local line = a.get(first_error, "line")
+local function unwrapped_results__3enth_test(unwrapped_results, n)
+  local nth_error = a.get(unwrapped_results, n)
+  if nth_error then
+    local namespace = a.get(nth_error, "ns")
+    local line = a.get(nth_error, "line")
     return {namespace = namespace, ["failed-line"] = line}
   else
     return nil
   end
+end
+_2amodule_2a["unwrapped-results->nth-test"] = unwrapped_results__3enth_test
+--[[ (unwrapped-results->nth-test (unwrap test-result) 1) ]]--
+--[[ (unwrapped-results->nth-test (unwrap test-result) 2) ]]--
+local function first_failing_test(test_result)
+  return unwrapped_results__3enth_test(unwrap(test_result), 1)
 end
 _2amodule_2a["first-failing-test"] = first_failing_test
 --[[ (first-failing-test test-result) ]]--

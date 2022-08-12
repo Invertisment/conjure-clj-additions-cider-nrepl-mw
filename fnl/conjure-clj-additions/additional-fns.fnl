@@ -72,18 +72,6 @@
           ;; This saves the `wrap-test` middleware so that with-conn-and-ops-or-warn would work
           (capture-describe!))))))
 
-(defn- put-first-failed-result! [results]
-  (own-state.put-first-failing-test-jump-loc!
-    (let [first-failing (display.first-failing-test results)]
-      (when first-failing
-        (jump.find-buffer-to-jump! first-failing))
-      ;jump.jump-to-buffer-and-line!
-      ; (->> (jump.find-buffer-to-jump! first-failing)
-      ;      a.vals
-      ;      (str.join ",")
-      ;      print)
-      )))
-
 (defn nrepl-test! [test-selector]
   (server.with-conn-and-ops-or-warn
     [:test :test-var-query]
@@ -92,9 +80,10 @@
         (a.assoc test-selector :session conn.session)
         (fn [response]
           (let [results (a.get response :results)]
-            (when results
-              (put-first-failed-result! results)
-              (log.append (display.to-lines results) {:break? true}))))))))
+            (let [unwrapped-results (display.unwrap results)]
+              (when results
+                (own-state.put-unwrapped-test-results! unwrapped-results)
+                (log.append (display.unwrapped-results->to-lines unwrapped-results) {:break? true})))))))))
 
 (defn nrepl-middleware-run-test-ns-tests! []
   (nrepl-test!
@@ -118,9 +107,11 @@
              :var-query {:ns-query {:exactly [test-ns]}
                          :exactly [(.. test-ns "/" test-name)]}}))))))
 
-(defn nrepl-jump-to-first-failing! []
+(defn nrepl-jump-to-nth-failing! []
   (jump.jump-to-buffer-and-line!
-    (own-state.get-first-failing-test-jump-loc)))
+    (display.unwrapped-results->nth-test
+      (own-state.get-unwrapped-test-results)
+      vim.v.count1)))
 
 (defn jump-to-first-failing! []
   (jump.jump-to-last-failing-test!))

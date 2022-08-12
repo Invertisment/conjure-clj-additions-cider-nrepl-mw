@@ -25,7 +25,7 @@ local function on_filetype()
   provide_fn_21("CcaJumpToFailingCljTest", "conjure-clj-additions.additional-fns", "jump-to-first-failing!")
   provide_fn_21("CcaNreplRunTestsInTestNs", "conjure-clj-additions.additional-fns", "nrepl-middleware-run-test-ns-tests!")
   provide_fn_21("CcaNreplRunCurrentTest", "conjure-clj-additions.additional-fns", "nrepl-run-current-test!")
-  provide_fn_21("CcaNreplJumpToFailingCljTest", "conjure-clj-additions.additional-fns", "nrepl-jump-to-first-failing!")
+  provide_fn_21("CcaNreplJumpToFailingCljTest", "conjure-clj-additions.additional-fns", "nrepl-jump-to-nth-failing!")
   provide_fn_21("CcaNsRemove", "conjure-clj-additions.additional-fns", "remove-ns!")
   return provide_fn_21("CcaNsCleanup", "conjure-clj-additions.additional-fns", "cleanup-ns!")
 end

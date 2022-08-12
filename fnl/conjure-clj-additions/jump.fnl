@@ -271,7 +271,7 @@
 (defn jump-to-buffer-and-line! [to-jump]
   (if to-jump
     (jump! to-jump)
-    (nvim.echo "No tests to jump to")))
+    (nvim.echo "Nothing to jump to")))
 
 (defn jump-to-last-failing-test! []
   (jump-to-buffer-and-line! (query-buffers-and-find-buffer-to-jump!)))

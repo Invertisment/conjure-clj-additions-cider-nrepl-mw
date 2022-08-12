@@ -1,14 +1,14 @@
 (module conjure-clj-additions.state)
 
-(global first-failing-test-loc nil)
+(global unwrapped-test-results nil)
 
-(defn put-first-failing-test-jump-loc! [jump-loc]
-  (global first-failing-test-loc jump-loc))
+(defn put-unwrapped-test-results! [value]
+  (global unwrapped-test-results value))
 
-(defn get-first-failing-test-jump-loc []
-  first-failing-test-loc)
+(defn get-unwrapped-test-results []
+  unwrapped-test-results)
 
-(global nrepl-test-middleware-present nil)
+(global nrepl-test-middleware-present false)
 
 (defn put-nrepl-test-middleware-present! [value]
   (global nrepl-test-middleware-present value))

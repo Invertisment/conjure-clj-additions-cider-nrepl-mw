@@ -10,17 +10,17 @@ do
   _2amodule_2a["aniseed/locals"] = {}
   _2amodule_locals_2a = (_2amodule_2a)["aniseed/locals"]
 end
-__fnl_global__first_2dfailing_2dtest_2dloc = nil
-local function put_first_failing_test_jump_loc_21(jump_loc)
-  __fnl_global__first_2dfailing_2dtest_2dloc = jump_loc
+__fnl_global__unwrapped_2dtest_2dresults = nil
+local function put_unwrapped_test_results_21(value)
+  __fnl_global__unwrapped_2dtest_2dresults = value
   return nil
 end
-_2amodule_2a["put-first-failing-test-jump-loc!"] = put_first_failing_test_jump_loc_21
-local function get_first_failing_test_jump_loc()
-  return __fnl_global__first_2dfailing_2dtest_2dloc
+_2amodule_2a["put-unwrapped-test-results!"] = put_unwrapped_test_results_21
+local function get_unwrapped_test_results()
+  return __fnl_global__unwrapped_2dtest_2dresults
 end
-_2amodule_2a["get-first-failing-test-jump-loc"] = get_first_failing_test_jump_loc
-__fnl_global__nrepl_2dtest_2dmiddleware_2dpresent = nil
+_2amodule_2a["get-unwrapped-test-results"] = get_unwrapped_test_results
+__fnl_global__nrepl_2dtest_2dmiddleware_2dpresent = false
 local function put_nrepl_test_middleware_present_21(value)
   __fnl_global__nrepl_2dtest_2dmiddleware_2dpresent = value
   return nil

@@ -328,7 +328,7 @@ local function jump_to_buffer_and_line_21(to_jump)
   if to_jump then
     return jump_21(to_jump)
   else
-    return nvim.echo("No tests to jump to")
+    return nvim.echo("Nothing to jump to")
   end
 end
 _2amodule_2a["jump-to-buffer-and-line!"] = jump_to_buffer_and_line_21

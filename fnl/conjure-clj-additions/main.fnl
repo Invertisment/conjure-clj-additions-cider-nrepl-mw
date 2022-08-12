@@ -18,7 +18,7 @@
   ;; nrepl-based functions
   (provide-fn! :CcaNreplRunTestsInTestNs :conjure-clj-additions.additional-fns :nrepl-middleware-run-test-ns-tests!)
   (provide-fn! :CcaNreplRunCurrentTest :conjure-clj-additions.additional-fns :nrepl-run-current-test!)
-  (provide-fn! :CcaNreplJumpToFailingCljTest :conjure-clj-additions.additional-fns :nrepl-jump-to-first-failing!)
+  (provide-fn! :CcaNreplJumpToFailingCljTest :conjure-clj-additions.additional-fns :nrepl-jump-to-nth-failing!)
   ;todo (provide-fn! :ConjureAdditionsRunTestsRetest :conjure-clj-additions.additional-fns :retest!)
 
   ;; util

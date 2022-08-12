@@ -73,33 +73,21 @@ local function load_test_middleware_21()
   return server["with-conn-and-ops-or-warn"]({"add-middleware"}, _3_)
 end
 _2amodule_2a["load-test-middleware!"] = load_test_middleware_21
-local function put_first_failed_result_21(results)
-  log.append({a.str(display["first-failing-test"](results))})
-  local function _5_()
-    local first_failing = display["first-failing-test"](results)
-    if first_failing then
-      return jump["find-buffer-to-jump!"](first_failing)
-    else
-      return nil
-    end
-  end
-  return own_state["put-first-failing-test-jump-loc!"](_5_())
-end
-_2amodule_locals_2a["put-first-failed-result!"] = put_first_failed_result_21
 local function nrepl_test_21(test_selector)
-  local function _7_(conn, ops)
-    local function _8_(response)
+  local function _5_(conn, ops)
+    local function _6_(response)
       local results = a.get(response, "results")
+      local unwrapped_results = display.unwrap(results)
       if results then
-        put_first_failed_result_21(results)
-        return log.append(display["to-lines"](results), {["break?"] = true})
+        own_state["put-unwrapped-test-results!"](unwrapped_results)
+        return log.append(display["unwrapped-results->to-lines"](unwrapped_results), {["break?"] = true})
       else
         return nil
       end
     end
-    return server.send(a.assoc(test_selector, "session", conn.session), _8_)
+    return server.send(a.assoc(test_selector, "session", conn.session), _6_)
   end
-  return server["with-conn-and-ops-or-warn"]({"test", "test-var-query"}, _7_)
+  return server["with-conn-and-ops-or-warn"]({"test", "test-var-query"}, _5_)
 end
 _2amodule_2a["nrepl-test!"] = nrepl_test_21
 local function nrepl_middleware_run_test_ns_tests_21()
@@ -130,10 +118,10 @@ local function nrepl_run_current_test_21()
   end
 end
 _2amodule_2a["nrepl-run-current-test!"] = nrepl_run_current_test_21
-local function nrepl_jump_to_first_failing_21()
-  return jump["jump-to-buffer-and-line!"](own_state["get-first-failing-test-jump-loc"]())
+local function nrepl_jump_to_nth_failing_21()
+  return jump["jump-to-buffer-and-line!"](display["unwrapped-results->nth-test"](own_state["get-unwrapped-test-results"](), vim.v.count1))
 end
-_2amodule_2a["nrepl-jump-to-first-failing!"] = nrepl_jump_to_first_failing_21
+_2amodule_2a["nrepl-jump-to-nth-failing!"] = nrepl_jump_to_nth_failing_21
 local function jump_to_first_failing_21()
   return jump["jump-to-last-failing-test!"]()
 end
