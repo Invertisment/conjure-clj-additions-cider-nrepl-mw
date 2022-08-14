@@ -73,29 +73,77 @@ local function load_test_middleware_21()
   return server["with-conn-and-ops-or-warn"]({"add-middleware"}, _3_)
 end
 _2amodule_2a["load-test-middleware!"] = load_test_middleware_21
+local function print_colored_21(text_groups)
+  return vim.api.nvim_echo(text_groups, false, {})
+end
+_2amodule_2a["print-colored!"] = print_colored_21
+local function txt_green(text0)
+  return {text0, "DiffAdded"}
+end
+_2amodule_2a["txt-green"] = txt_green
+local function txt_red(text0)
+  return {text0, "DiffRemoved"}
+end
+_2amodule_2a["txt-red"] = txt_red
+local function txt_yellow(text0)
+  return {text0, "DiffText"}
+end
+_2amodule_2a["txt-yellow"] = txt_yellow
+local function txt_normal(text0)
+  return {text0, "Normal"}
+end
+_2amodule_2a["txt-normal"] = txt_normal
+local function join_prints(sep_chunk, print_chunks)
+  local function _5_(chunk)
+    return {chunk, sep_chunk}
+  end
+  return a.butlast(a.mapcat(_5_, print_chunks))
+end
+_2amodule_2a["join-prints"] = join_prints
+local function pos_3f(n)
+  return (n > 0)
+end
+_2amodule_2a["pos?"] = pos_3f
+local function test_resp__3etext_groups(response, descriptions)
+  local function _6_(desc)
+    local _let_7_ = desc
+    local loc = _let_7_[1]
+    local color_fn = _let_7_[2]
+    local txt_postfix = _let_7_[3]
+    local value = a["get-in"](response, loc)
+    if pos_3f(value) then
+      return color_fn((value .. txt_postfix))
+    else
+      return nil
+    end
+  end
+  return join_prints(txt_normal(" "), a.map(_6_, descriptions))
+end
+_2amodule_2a["test-resp->text-groups"] = test_resp__3etext_groups
 local function nrepl_test_21(test_selector, printable_info)
   nvim.echo("...")
   log.append({("; Running tests in " .. printable_info)}, {["break?"] = true, ["suppress-hud?"] = true})
-  local function _5_(conn, ops)
-    local function _6_(response)
+  local function _9_(conn, ops)
+    local function _10_(response)
       local results = a.get(response, "results")
       local unwrapped_results = display.unwrap(results)
       if results then
         own_state["put-unwrapped-test-results!"](unwrapped_results)
         local lines = display["unwrapped-results->to-lines"](unwrapped_results)
         if (0 == a.count(lines)) then
-          nvim.echo("Tests passed")
+          print_colored_21(test_resp__3etext_groups(response, {{{"summary", "pass"}, txt_green, " tests passed"}}))
           return log.append({"; Tests passed"}, {["suppress-hud?"] = true})
         else
+          print_colored_21(test_resp__3etext_groups(response, {{{"summary", "fail"}, txt_yellow, " errors"}, {{"summary", "error"}, txt_red, " failures"}}))
           return log.append(lines, {["break?"] = true})
         end
       else
         return nil
       end
     end
-    return server.send(a.assoc(test_selector, "session", conn.session), _6_)
+    return server.send(a.assoc(test_selector, "session", conn.session), _10_)
   end
-  return server["with-conn-and-ops-or-warn"]({"test", "test-var-query"}, _5_)
+  return server["with-conn-and-ops-or-warn"]({"test", "test-var-query"}, _9_)
 end
 _2amodule_2a["nrepl-test!"] = nrepl_test_21
 local function nrepl_middleware_run_test_ns_tests_21()

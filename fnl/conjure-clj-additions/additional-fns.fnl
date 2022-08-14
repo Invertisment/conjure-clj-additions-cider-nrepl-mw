@@ -72,6 +72,41 @@
           ;; This saves the `wrap-test` middleware so that with-conn-and-ops-or-warn would work
           (capture-describe!))))))
 
+(defn print-colored! [text-groups]
+  (vim.api.nvim_echo text-groups false {}))
+
+(defn txt-green  [text] [text "DiffAdded"])
+(defn txt-red    [text] [text "DiffRemoved"])
+(defn txt-yellow [text] [text "DiffText"])
+(defn txt-normal [text] [text "Normal"])
+
+(defn join-prints [sep-chunk print-chunks]
+  (->> print-chunks
+       (a.mapcat (fn [chunk]
+                   [chunk sep-chunk]))
+       a.butlast))
+
+(defn pos? [n]
+  (> n 0))
+
+(defn test-resp->text-groups [response descriptions]
+  (->> descriptions
+       (a.map (fn [desc]
+                (let [[loc color-fn txt-postfix] desc
+                      value (a.get-in response loc)]
+                  (when (pos? value) (color-fn (.. value txt-postfix))))))
+       (join-prints (txt-normal " "))))
+;(comment (test-resp->text-groups {:resp {:fail 10 :error 2}}
+;           [[[:resp :fail]  txt-yellow " errors"]
+;            [[:resp :error] txt-red    " failures"]]))
+;(comment (test-resp->text-groups
+;           {:resp {:fail 0 :error 2}}
+;           [[[:resp :fail]  txt-yellow " errors"]
+;            [[:resp :error] txt-red    " failures"]]))
+;(comment (test-resp->text-groups
+;           {:resp {:fail 0 :error 2 :pass 5}}
+;           [[[:resp :pass]  txt-green  " tests passed"]]))
+
 (defn nrepl-test! [test-selector printable-info]
   (nvim.echo "...")
   (log.append [(.. "; Running tests in " printable-info)]
@@ -90,9 +125,16 @@
                 (let [lines (display.unwrapped-results->to-lines unwrapped-results)]
                   (if (= 0 (a.count lines))
                     (do
-                      (nvim.echo "Tests passed")
+                      (print-colored! (test-resp->text-groups
+                                        response
+                                        [[[:summary :pass]  txt-green  " tests passed"]]))
                       (log.append ["; Tests passed"] {:suppress-hud? true}))
-                    (log.append lines {:break? true})))))))))))
+                    (do
+                      (print-colored! (test-resp->text-groups
+                                        response
+                                        [[[:summary :fail]  txt-yellow " errors"]
+                                         [[:summary :error] txt-red    " failures"]]))
+                      (log.append lines {:break? true}))))))))))))
 
 (defn nrepl-middleware-run-test-ns-tests! []
   (let [test-ns (get-test-ns-name!)]
