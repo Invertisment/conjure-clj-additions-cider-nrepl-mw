@@ -53,21 +53,17 @@
 
 ;; https://github.com/Olical/conjure/blob/2e7f449d06753f2996e186954e96afc60edd5862/fnl/conjure/client/clojure/nrepl/server.fnl#L213
 (defn nrepl-middleware-present? []
-  (own-state.get-nrepl-test-middleware-present))
+  (a.get-in (state.get) [:conn :describe :ops :test-var-query]))
 
 (defn load-test-middleware! []
   (server.with-conn-and-ops-or-warn
     [:add-middleware]
     (fn [conn ops]
-      (print "before add-middleware")
       (server.send
         {:op :add-middleware
          :session conn.session
          :middleware ["cider.nrepl/wrap-test"]}
         (fn [_add-middleware-result]
-          (print (.. "_add-middleware-result"
-                     (str.join "," (a.keys _add-middleware-result))))
-          (own-state.put-nrepl-test-middleware-present! true)
           ;; Copied from Conjure's internals.
           ;; This saves the `wrap-test` middleware so that with-conn-and-ops-or-warn would work
           (capture-describe!))))))
@@ -78,7 +74,7 @@
 (defn txt-green  [text] [text "DiffAdded"])
 (defn txt-red    [text] [text "DiffRemoved"])
 (defn txt-yellow [text] [text "DiffText"])
-(defn txt-normal [text] [text "Normal"])
+(defn txt-normal [text] [text])
 
 (defn join-prints [sep-chunk print-chunks]
   (->> print-chunks

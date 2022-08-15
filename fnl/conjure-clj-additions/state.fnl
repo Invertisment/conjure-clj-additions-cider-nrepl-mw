@@ -7,11 +7,3 @@
 
 (defn get-unwrapped-test-results []
   unwrapped-test-results)
-
-(global nrepl-test-middleware-present false)
-
-(defn put-nrepl-test-middleware-present! [value]
-  (global nrepl-test-middleware-present value))
-
-(defn get-nrepl-test-middleware-present []
-  nrepl-test-middleware-present)

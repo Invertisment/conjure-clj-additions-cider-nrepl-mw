@@ -60,6 +60,7 @@ autocmd FileType clojure nnoremap <silent> <localleader>tn :JumpToFirstCljTestRu
 
 These functions are provided to interact with nREPL session that will run the tests:
 ```
+:CcaNreplLoadTestMiddleware   // Loads nREPL test middleware into the REPL (has to be done at least once per new REPL)
 :CcaNreplRunTestsInTestNs     // Run tests from test ns regardless if you're in test or in main ns
 :CcaNreplRunCurrentTest       // Run testsuite under the cursor
 :CcaNreplJumpToFailingCljTest // Jump to first failed test
@@ -78,8 +79,11 @@ autocmd FileType clojure nnoremap <silent> <localleader>tc :CcaNreplRunCurrentTe
 " Not the original Conjure mapping but it's better to have it under the finger that you already pressed:
 "autocmd FileType clojure nnoremap <silent> <localleader>tt :CcaNreplRunCurrentTest<CR>
 ```
-The plugin will print the test output and remember the last failed tests.
-It will not try to recover from switched REPL and you'll need to restart your editor as nREPL test middleware wouldn't be set.
+
+The plugin will print the test output and remember the last failed tests (because nREPL middleware does that).
 
 `CcaNreplJumpToFailingCljTest` also supports additional functionality to jump to nth test by typing a number before running the function.
 For instance if I bind this function to `<>tf` then I could press `2<>tf` to jump to the second failed test.
+
+When switching REPL then the old test result will be left in the cache and the jump-to-test could be wrong.
+It's possible it may not rehook the test middleware as well and to do it manually execute `:CcaNreplLoadTestMiddleware`.

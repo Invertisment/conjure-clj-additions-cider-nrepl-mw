@@ -57,15 +57,12 @@ local function capture_describe_21()
 end
 _2amodule_locals_2a["capture-describe!"] = capture_describe_21
 local function nrepl_middleware_present_3f()
-  return own_state["get-nrepl-test-middleware-present"]()
+  return a["get-in"](state.get(), {"conn", "describe", "ops", "test-var-query"})
 end
 _2amodule_2a["nrepl-middleware-present?"] = nrepl_middleware_present_3f
 local function load_test_middleware_21()
   local function _3_(conn, ops)
-    print("before add-middleware")
     local function _4_(_add_middleware_result)
-      print(("_add-middleware-result" .. str.join(",", a.keys(_add_middleware_result))))
-      own_state["put-nrepl-test-middleware-present!"](true)
       return capture_describe_21()
     end
     return server.send({op = "add-middleware", session = conn.session, middleware = {"cider.nrepl/wrap-test"}}, _4_)
@@ -90,7 +87,7 @@ local function txt_yellow(text0)
 end
 _2amodule_2a["txt-yellow"] = txt_yellow
 local function txt_normal(text0)
-  return {text0, "Normal"}
+  return {text0}
 end
 _2amodule_2a["txt-normal"] = txt_normal
 local function join_prints(sep_chunk, print_chunks)
