@@ -73,7 +73,7 @@
 
 (defn txt-green  [text] [text "DiffAdded"])
 (defn txt-red    [text] [text "DiffRemoved"])
-(defn txt-yellow [text] [text "diffNewFile"])
+(defn txt-yellow [text] [text "diffFile"])
 (defn txt-normal [text] [text])
 
 (defn join-prints [sep-chunk print-chunks]
@@ -128,8 +128,8 @@
                     (do
                       (print-colored! (test-resp->text-groups
                                         response
-                                        [[[:summary :fail]  txt-yellow " errors"]
-                                         [[:summary :error] txt-red    " failures"]]))
+                                        [[[:summary :error] txt-red    " errors"]
+                                         [[:summary :fail]  txt-yellow " failures"]]))
                       (log.append lines {:break? true}))))))))))))
 
 (defn nrepl-middleware-run-test-ns-tests! []

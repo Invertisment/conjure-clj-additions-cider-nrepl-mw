@@ -83,7 +83,7 @@ local function txt_red(text0)
 end
 _2amodule_2a["txt-red"] = txt_red
 local function txt_yellow(text0)
-  return {text0, "diffNewFile"}
+  return {text0, "diffFile"}
 end
 _2amodule_2a["txt-yellow"] = txt_yellow
 local function txt_normal(text0)
@@ -131,7 +131,7 @@ local function nrepl_test_21(test_selector, printable_info)
           print_colored_21(test_resp__3etext_groups(response, {{{"summary", "pass"}, txt_green, " tests passed"}}))
           return log.append({"; Tests passed"}, {["suppress-hud?"] = true})
         else
-          print_colored_21(test_resp__3etext_groups(response, {{{"summary", "fail"}, txt_yellow, " errors"}, {{"summary", "error"}, txt_red, " failures"}}))
+          print_colored_21(test_resp__3etext_groups(response, {{{"summary", "error"}, txt_red, " errors"}, {{"summary", "fail"}, txt_yellow, " failures"}}))
           return log.append(lines, {["break?"] = true})
         end
       else
