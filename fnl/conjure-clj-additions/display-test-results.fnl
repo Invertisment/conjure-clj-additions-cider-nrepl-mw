@@ -67,12 +67,24 @@
     (when (not (= 0 (a.count result)))
       (pprint-str (.. text " ") result))))
 
+(defn display-loc [ns suite-sym line]
+  (.. ns "/" suite-sym (if line
+                         (.. ":" line " ")
+                         "")))
+
+(defn display-assertion-text [text]
+  (if (= 0 (a.count text))
+    ""
+    "\"" text "\" "))
+
 (defn display-suite-sym [result-type ns suite-sym line text]
+  (if (= 0 (a.count text))
+    ""
+    "\"" text "\" ")
   (if line
-    ;(.. result-type " in " ns "/" suite-sym ":" line " (" text ")")
-    ;(.. result-type " in " ns "/" suite-sym          " (" text ")")
-    (.. ns "/" suite-sym ":" line " \"" text "\" " result-type)
-    (.. ns "/" suite-sym          " \"" text "\" " result-type)))
+    (.. (display-loc ns suite-sym line)
+        (display-assertion-text text)
+        result-type)))
 
 (defn display-suite-result [test-index suite-result]
   (let [ns (a.get suite-result :ns)

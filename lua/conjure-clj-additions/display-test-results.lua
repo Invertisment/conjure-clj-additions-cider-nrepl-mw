@@ -61,11 +61,36 @@ local function display_result(text, suite_result, key)
   end
 end
 _2amodule_2a["display-result"] = display_result
-local function display_suite_sym(result_type, ns, suite_sym, line, text)
-  if line then
-    return (ns .. "/" .. suite_sym .. ":" .. line .. " \"" .. text .. "\" " .. result_type)
+local function display_loc(ns, suite_sym, line)
+  local function _4_()
+    if line then
+      return (":" .. line .. " ")
+    else
+      return ""
+    end
+  end
+  return (ns .. "/" .. suite_sym .. _4_())
+end
+_2amodule_2a["display-loc"] = display_loc
+local function display_assertion_text(text)
+  if (0 == a.count(text)) then
+    return ""
+  elseif "\"" then
+    return text
   else
-    return (ns .. "/" .. suite_sym .. " \"" .. text .. "\" " .. result_type)
+    return "\" "
+  end
+end
+_2amodule_2a["display-assertion-text"] = display_assertion_text
+local function display_suite_sym(result_type, ns, suite_sym, line, text)
+  if (0 == a.count(text)) then
+  elseif "\"" then
+  else
+  end
+  if line then
+    return (display_loc(ns, suite_sym, line) .. display_assertion_text(text) .. result_type)
+  else
+    return nil
   end
 end
 _2amodule_2a["display-suite-sym"] = display_suite_sym
@@ -92,38 +117,38 @@ end
 _2amodule_2a["display-ns-header"] = display_ns_header
 --[[ (display-ns-header "utils.my-test") ]]--
 local function unwrap_suite_results(suite_results)
-  local function _5_(res, suite_result)
+  local function _8_(res, suite_result)
     if pass_3f(suite_result) then
       return res
     else
       return a.concat(res, {suite_result})
     end
   end
-  return a.reduce(_5_, {}, suite_results)
+  return a.reduce(_8_, {}, suite_results)
 end
 _2amodule_2a["unwrap-suite-results"] = unwrap_suite_results
 local function unwrap_ns_result(ns_result)
-  local function _7_(res, suite_symbol)
+  local function _10_(res, suite_symbol)
     return a.concat(res, unwrap_suite_results(a.get(ns_result, suite_symbol)))
   end
-  return a.reduce(_7_, {}, a.keys(ns_result))
+  return a.reduce(_10_, {}, a.keys(ns_result))
 end
 _2amodule_2a["unwrap-ns-result"] = unwrap_ns_result
 local function unwrap(test_result)
-  local function _8_(unwrapped, ns)
+  local function _11_(unwrapped, ns)
     return a.concat(unwrapped, unwrap_ns_result(a.get(test_result, ns)))
   end
-  return a.reduce(_8_, {}, a.keys(test_result))
+  return a.reduce(_11_, {}, a.keys(test_result))
 end
 _2amodule_2a["unwrap"] = unwrap
 --[[ (unwrap test-result) ]]--
 local function unwrapped_results__3eto_lines(unwrapped_results)
-  local function _9_(iv)
+  local function _12_(iv)
     local i = a.first(iv)
     local v = a.second(iv)
     return display_suite_result(i, v)
   end
-  return a.mapcat(a.identity, a["map-indexed"](_9_, unwrapped_results))
+  return a.mapcat(a.identity, a["map-indexed"](_12_, unwrapped_results))
 end
 _2amodule_2a["unwrapped-results->to-lines"] = unwrapped_results__3eto_lines
 local function to_lines(test_result)
