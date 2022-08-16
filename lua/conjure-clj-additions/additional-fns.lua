@@ -83,7 +83,7 @@ local function txt_red(text0)
 end
 _2amodule_2a["txt-red"] = txt_red
 local function txt_yellow(text0)
-  return {text0, "DiffText"}
+  return {text0, "diffNewFile"}
 end
 _2amodule_2a["txt-yellow"] = txt_yellow
 local function txt_normal(text0)

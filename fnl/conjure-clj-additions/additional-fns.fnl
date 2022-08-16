@@ -73,7 +73,7 @@
 
 (defn txt-green  [text] [text "DiffAdded"])
 (defn txt-red    [text] [text "DiffRemoved"])
-(defn txt-yellow [text] [text "DiffText"])
+(defn txt-yellow [text] [text "diffNewFile"])
 (defn txt-normal [text] [text])
 
 (defn join-prints [sep-chunk print-chunks]
