@@ -159,10 +159,10 @@
             printable-info))))))
 
 (defn nrepl-jump-to-nth-failing! []
-  (jump.jump-to-buffer-and-line!
-    (display.unwrapped-results->nth-test
-      (own-state.get-unwrapped-test-results)
-      vim.v.count1)))
+  (-> (own-state.get-unwrapped-test-results)
+      (display.unwrapped-results->nth-test vim.v.count1)
+      jump.find-buffer-to-jump!
+      jump.jump-to-buffer-and-line!))
 
 (defn jump-to-first-failing! []
   (jump.jump-to-last-failing-test!))

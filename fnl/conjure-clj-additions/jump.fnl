@@ -251,8 +251,7 @@
   (vim.api.nvim_command "call search('[^ \t]')"))
 
 (defn jump! [buffer-and-line-info]
-  (let [;buffer-id (a.get buffer-and-line-info :buffer-id)
-        buffer-name (a.get buffer-and-line-info :buffer-name)
+  (let [buffer-name (a.get buffer-and-line-info :buffer-name)
         failed-line (a.get buffer-and-line-info :failed-line)]
     (go-to-line! buffer-name failed-line)
     ;;(go-to-first-readable-char! buffer-id)

@@ -174,7 +174,7 @@ local function nrepl_run_current_test_21()
 end
 _2amodule_2a["nrepl-run-current-test!"] = nrepl_run_current_test_21
 local function nrepl_jump_to_nth_failing_21()
-  return jump["jump-to-buffer-and-line!"](display["unwrapped-results->nth-test"](own_state["get-unwrapped-test-results"](), vim.v.count1))
+  return jump["jump-to-buffer-and-line!"](jump["find-buffer-to-jump!"](display["unwrapped-results->nth-test"](own_state["get-unwrapped-test-results"](), vim.v.count1)))
 end
 _2amodule_2a["nrepl-jump-to-nth-failing!"] = nrepl_jump_to_nth_failing_21
 local function jump_to_first_failing_21()
