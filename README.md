@@ -1,4 +1,4 @@
-## Conjure additions
+## Conjure Clojure additions
 
 Provides two modes to jump to failing test and execute tests (functions have to be mapped manually):
 1. Conjure's original mode -- limited jumping but more basic setup and doesn't require nREPL in your `:dev` deps
@@ -58,6 +58,8 @@ autocmd FileType clojure nnoremap <silent> <localleader>tn :JumpToFirstCljTestRu
 ```
 
 ## nREPL-based tests
+Requires [nREPL](https://github.com/clojure-emacs/cider-nrepl/) to be added to your `:dependencies`.
+You may want to add it to `.lein/profiles.clj` file so that it would be present in all projects.
 
 These functions are provided to interact with nREPL session that will run the tests:
 ```
