@@ -19,21 +19,26 @@ _2amodule_locals_2a["str"] = str
 local function try_load_21(match_filetype, retries, is_loaded_fn, try_load_fn)
   if (match_filetype == vim.bo.filetype) then
     local i = 0
+    local skip = false
     local timer = vim.loop.new_timer()
     local function _1_()
-      try_load_fn()
-      if is_loaded_fn() then
-        return timer:close()
+      local function _2_()
+        return try_load_fn()
+      end
+      vim.schedule_wrap(_2_)()
+      if skip then
+        return nil
       else
-        i = (1 + i)
-        if (i >= retries) then
+        if (is_loaded_fn() or not (i >= retries)) then
+          skip = true
           return timer:close()
         else
+          i = (1 + i)
           return nil
         end
       end
     end
-    return timer:start(500, 100, vim.schedule_wrap(_1_))
+    return timer:start(500, 100, _1_)
   else
     return nil
   end

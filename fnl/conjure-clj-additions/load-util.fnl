@@ -9,16 +9,17 @@
   (when (= match-filetype vim.bo.filetype)
     ; https://vi.stackexchange.com/questions/33056/how-to-use-vim-loop-interactively-in-neovim
     (var i 0)
+    (var skip false)
     (let [timer (vim.loop.new_timer) ]
-      (timer:start 
+      (timer:start
         500 ; wait for 500 ms and attempt the first callback
         100 ; time between attempts
-        (vim.schedule_wrap 
-          (fn []
-            (try-load-fn)
-            (if (is-loaded-fn)
-              (timer:close)
+        (fn []
+          ((vim.schedule_wrap (fn [] (try-load-fn))))
+          (if skip
+            nil
+            (if (or (is-loaded-fn) (not (>= i retries)))
               (do
-                (set i (+ 1 i))
-                (when (>= i retries)
-                  (timer:close))))))))))
+                (set skip true)
+                (timer:close))
+              (set i (+ 1 i)))))))))
