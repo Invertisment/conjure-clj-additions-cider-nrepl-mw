@@ -16,6 +16,7 @@
   (load-util.try-load! "clojure" 10 fns.nrepl-middleware-present? fns.load-test-middleware!))
 
 (defn on-filetype []
+  (provide-fn! :CcaNsJumpToAlternate :conjure-clj-additions.additional-fns :jump-to-alternate-ns!)
 
   ;; log-parsing functions (based on original way Conjure does things on its own)
   (provide-fn! :CcaRunTestsInTestNs :conjure-clj-additions.additional-fns :run-test-ns-tests!)

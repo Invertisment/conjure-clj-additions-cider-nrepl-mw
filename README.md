@@ -6,8 +6,9 @@ Provides two modes to jump to failing test and execute tests (functions have to 
 
 Provides these additional helpers:
 ```
-:CcaNsCleanup // Clean current ns (doesn't break the ns that imports current ns)
-:CcaNsRemove  // Run `remove-ns` on the current namespace
+:CcaNsCleanup         // Clean current ns (doesn't break the ns that imports current ns)
+:CcaNsRemove          // Run `remove-ns` on the current namespace
+:CcaNsJumpToAlternate // Jumps to `-test` or to regular ns depending on which one you're located in
 ```
 
 It's based on [Conjure](https://github.com/Olical/conjure/) and requires it to operate (strongly coupled, parses the log output).

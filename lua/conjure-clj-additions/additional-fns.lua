@@ -41,6 +41,15 @@ local function get_test_ns_name_21()
   return to_test_ns_name(get_current_ns_21())
 end
 _2amodule_2a["get-test-ns-name!"] = get_test_ns_name_21
+local function get_alternate_ns_name_21()
+  local current_ns = get_current_ns_21()
+  if text["ends-with"](current_ns, "-test") then
+    return string.sub(current_ns, 1, -6)
+  else
+    return (current_ns .. "-test")
+  end
+end
+_2amodule_2a["get-alternate-ns-name!"] = get_alternate_ns_name_21
 local function remove_ns_21()
   return eval.command("(remove-ns (symbol (str *ns*)))")
 end
@@ -50,10 +59,10 @@ local function cleanup_ns_21()
 end
 _2amodule_2a["cleanup-ns!"] = cleanup_ns_21
 local function capture_describe_21()
-  local function _2_(msg)
+  local function _3_(msg)
     return a.assoc(state.get("conn"), "describe", msg)
   end
-  return server.send({op = "describe"}, _2_)
+  return server.send({op = "describe"}, _3_)
 end
 _2amodule_locals_2a["capture-describe!"] = capture_describe_21
 local function nrepl_middleware_present_3f()
@@ -61,13 +70,13 @@ local function nrepl_middleware_present_3f()
 end
 _2amodule_2a["nrepl-middleware-present?"] = nrepl_middleware_present_3f
 local function load_test_middleware_21()
-  local function _3_(conn, ops)
-    local function _4_(_add_middleware_result)
+  local function _4_(conn, ops)
+    local function _5_(_add_middleware_result)
       return capture_describe_21()
     end
-    return server.send({op = "add-middleware", session = conn.session, middleware = {"cider.nrepl/wrap-test"}}, _4_)
+    return server.send({op = "add-middleware", session = conn.session, middleware = {"cider.nrepl/wrap-test"}}, _5_)
   end
-  return server["with-conn-and-ops-or-warn"]({"add-middleware"}, _3_)
+  return server["with-conn-and-ops-or-warn"]({"add-middleware"}, _4_)
 end
 _2amodule_2a["load-test-middleware!"] = load_test_middleware_21
 local function print_colored_21(text_groups)
@@ -91,10 +100,10 @@ local function txt_normal(text0)
 end
 _2amodule_2a["txt-normal"] = txt_normal
 local function join_prints(sep_chunk, print_chunks)
-  local function _5_(chunk)
+  local function _6_(chunk)
     return {chunk, sep_chunk}
   end
-  return a.butlast(a.mapcat(_5_, print_chunks))
+  return a.butlast(a.mapcat(_6_, print_chunks))
 end
 _2amodule_2a["join-prints"] = join_prints
 local function pos_3f(n)
@@ -102,11 +111,11 @@ local function pos_3f(n)
 end
 _2amodule_2a["pos?"] = pos_3f
 local function test_resp__3etext_groups(response, descriptions)
-  local function _6_(desc)
-    local _let_7_ = desc
-    local loc = _let_7_[1]
-    local color_fn = _let_7_[2]
-    local txt_postfix = _let_7_[3]
+  local function _7_(desc)
+    local _let_8_ = desc
+    local loc = _let_8_[1]
+    local color_fn = _let_8_[2]
+    local txt_postfix = _let_8_[3]
     local value = a["get-in"](response, loc)
     if pos_3f(value) then
       return color_fn((value .. txt_postfix))
@@ -114,14 +123,14 @@ local function test_resp__3etext_groups(response, descriptions)
       return nil
     end
   end
-  return join_prints(txt_normal(" "), a.map(_6_, descriptions))
+  return join_prints(txt_normal(" "), a.map(_7_, descriptions))
 end
 _2amodule_2a["test-resp->text-groups"] = test_resp__3etext_groups
 local function nrepl_test_21(test_selector, printable_info)
   nvim.echo("...")
   log.append({("; Running tests in " .. printable_info)}, {["break?"] = true, ["suppress-hud?"] = true})
-  local function _9_(conn, ops)
-    local function _10_(response)
+  local function _10_(conn, ops)
+    local function _11_(response)
       local results = a.get(response, "results")
       local unwrapped_results = display.unwrap(results)
       if results then
@@ -138,9 +147,9 @@ local function nrepl_test_21(test_selector, printable_info)
         return nil
       end
     end
-    return server.send(a.assoc(test_selector, "session", conn.session), _10_)
+    return server.send(a.assoc(test_selector, "session", conn.session), _11_)
   end
-  return server["with-conn-and-ops-or-warn"]({"test", "test-var-query"}, _9_)
+  return server["with-conn-and-ops-or-warn"]({"test", "test-var-query"}, _10_)
 end
 _2amodule_2a["nrepl-test!"] = nrepl_test_21
 local function nrepl_middleware_run_test_ns_tests_21()
@@ -181,4 +190,9 @@ local function jump_to_first_failing_21()
   return jump["jump-to-last-failing-test!"]()
 end
 _2amodule_2a["jump-to-first-failing!"] = jump_to_first_failing_21
+local function jump_to_alternate_ns_21()
+  local to_find = get_alternate_ns_name_21()
+  return jump["jump-to-buffer-and-line!"](jump["find-buffer-to-jump!"]({namespace = to_find}))
+end
+_2amodule_2a["jump-to-alternate-ns!"] = jump_to_alternate_ns_21
 return _2amodule_2a

@@ -26,6 +26,7 @@ local function load_test_middleware_21()
 end
 _2amodule_2a["load-test-middleware!"] = load_test_middleware_21
 local function on_filetype()
+  provide_fn_21("CcaNsJumpToAlternate", "conjure-clj-additions.additional-fns", "jump-to-alternate-ns!")
   provide_fn_21("CcaRunTestsInTestNs", "conjure-clj-additions.additional-fns", "run-test-ns-tests!")
   provide_fn_21("CcaJumpToFailingCljTest", "conjure-clj-additions.additional-fns", "jump-to-first-failing!")
   provide_fn_21("CcaNreplLoadTestMiddleware", "conjure-clj-additions.main", "load-test-middleware!")

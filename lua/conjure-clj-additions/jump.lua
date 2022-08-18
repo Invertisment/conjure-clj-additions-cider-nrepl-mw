@@ -11,12 +11,13 @@ do
   _2amodule_locals_2a = (_2amodule_2a)["aniseed/locals"]
 end
 local autoload = (require("conjure-clj-additions.aniseed.autoload")).autoload
-local a, buffer, client, editor, fennel, nvim, str = autoload("conjure-clj-additions.aniseed.core"), autoload("conjure.buffer"), autoload("conjure.client"), autoload("conjure.editor"), autoload("fennel"), autoload("conjure.aniseed.nvim"), autoload("conjure.aniseed.string")
+local a, buffer, client, editor, fennel, fs, nvim, str = autoload("conjure-clj-additions.aniseed.core"), autoload("conjure.buffer"), autoload("conjure.client"), autoload("conjure.editor"), autoload("fennel"), autoload("conjure.fs"), autoload("conjure.aniseed.nvim"), autoload("conjure.aniseed.string")
 do end (_2amodule_locals_2a)["a"] = a
 _2amodule_locals_2a["buffer"] = buffer
 _2amodule_locals_2a["client"] = client
 _2amodule_locals_2a["editor"] = editor
 _2amodule_locals_2a["fennel"] = fennel
+_2amodule_locals_2a["fs"] = fs
 _2amodule_locals_2a["nvim"] = nvim
 _2amodule_locals_2a["str"] = str
 local function execution_separator_3f(line)
@@ -280,14 +281,19 @@ _2amodule_2a["find-matching-buffer"] = find_matching_buffer
 --[[ (find-matching-buffer "core.core-test" sample-buffers) ]]--
 --[[ (find-matching-buffer "core.core-test2" sample-buffers) ]]--
 --[[ (find-matching-buffer "core.core-test" (get-buffers!)) ]]--
-local function find_buffer_to_jump_21(findings)
-  local failing_namespace = a.get(findings, "namespace")
-  local failing_line = a.get(findings, "failed-line")
+local function find_buffer_to_jump_21(buf_info)
+  local failing_namespace = a.get(buf_info, "namespace")
+  local failing_line = a.get(buf_info, "failed-line")
   if failing_namespace then
-    return a.merge(find_matching_buffer(failing_namespace, get_buffers_21()), findings)
+    local found = find_matching_buffer(failing_namespace, get_buffers_21())
+    if found then
+      return a.merge(found, buf_info)
+    else
+      return nil
+    end
   else
     if failing_line then
-      return a.merge(get_current_buffer_21(), findings)
+      return a.merge(get_current_buffer_21(), buf_info)
     else
       return nil
     end
@@ -299,19 +305,40 @@ local function query_buffers_and_find_buffer_to_jump_21()
 end
 _2amodule_2a["query-buffers-and-find-buffer-to-jump!"] = query_buffers_and_find_buffer_to_jump_21
 --[[ (query-buffers-and-find-buffer-to-jump!) ]]--
+local function edit_buffer_21(buffer_name)
+  if a["string?"](buffer_name) then
+    return nvim.ex.edit(fs["localise-path"](buffer_name))
+  else
+    return nil
+  end
+end
+_2amodule_2a["edit-buffer!"] = edit_buffer_21
+local function go_to_first_char_21()
+  return vim.api.nvim_exec(":normal! _", false)
+end
+_2amodule_2a["go-to-first-char!"] = go_to_first_char_21
 local function go_to_line_21(buffer_name, line)
-  return editor["go-to"](buffer_name, line, 1)
+  edit_buffer_21(buffer_name)
+  editor["go-to"](buffer_name, line, 1)
+  return go_to_first_char_21()
 end
 _2amodule_2a["go-to-line!"] = go_to_line_21
 --[[ (go-to-line! (nvim.buf_get_name (nvim.buf.nr)) 249) ]]--
+local function go_to_buffer_21(buffer_name, buffer_id)
+  return edit_buffer_21(buffer_name)
+end
+_2amodule_2a["go-to-buffer!"] = go_to_buffer_21
 local function go_to_first_readable_char_21(buffer_id)
   return vim.api.nvim_command("call search('[^ \9]')")
 end
 _2amodule_2a["go-to-first-readable-char!"] = go_to_first_readable_char_21
 local function jump_21(buffer_and_line_info)
-  local buffer_name = a.get(buffer_and_line_info, "buffer-name")
   local failed_line = a.get(buffer_and_line_info, "failed-line")
-  return go_to_line_21(buffer_name, failed_line)
+  if failed_line then
+    return go_to_line_21(a.get(buffer_and_line_info, "buffer-name"), failed_line)
+  else
+    return go_to_buffer_21(a.get(buffer_and_line_info, "buffer-name"), a.get(buffer_and_line_info, "buffer-id"))
+  end
 end
 _2amodule_2a["jump!"] = jump_21
 --[[ (jump! {:buffer-id 26

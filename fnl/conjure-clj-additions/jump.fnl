@@ -5,7 +5,9 @@
               fennel fennel
               buffer conjure.buffer
               a aniseed.core
-              editor conjure.editor }})
+              editor conjure.editor
+              fs conjure.fs
+              }})
 
 (defn execution-separator? [line]
   (string.match line "^; [-]"))
@@ -226,36 +228,51 @@
 (comment (find-matching-buffer "core.core-test" sample-buffers))
 (comment (find-matching-buffer "core.core-test2" sample-buffers))
 (comment (find-matching-buffer "core.core-test" (get-buffers!)))
-(defn find-buffer-to-jump! [findings]
-  (let [failing-namespace (a.get findings :namespace)
-        failing-line (a.get findings :failed-line)]
+(defn find-buffer-to-jump! [buf-info]
+  (let [failing-namespace (a.get buf-info :namespace)
+        failing-line (a.get buf-info :failed-line)]
     (if failing-namespace
-      (a.merge (find-matching-buffer failing-namespace (get-buffers!)) findings)
+      (let [found (find-matching-buffer failing-namespace (get-buffers!))]
+        (when found
+          (a.merge found buf-info)))
       (when failing-line
         ;; TODO: could be nice to check it it's a test buffer
-        (a.merge (get-current-buffer!) findings)))))
+        (a.merge (get-current-buffer!) buf-info)))))
 (defn query-buffers-and-find-buffer-to-jump! []
   (find-buffer-to-jump! (first-error-jump (filter-test-outputs (conjure-log-buf-content!)))))
 (comment (query-buffers-and-find-buffer-to-jump!))
+
+(defn edit-buffer! [buffer-name]
+  (when (a.string? buffer-name)
+    (nvim.ex.edit (fs.localise-path buffer-name))))
+
+(defn go-to-first-char! []
+  (vim.api.nvim_exec ":normal! _" false))
 
 ;; vim commands https://github.com/norcalli/nvim.lua
 ;;vim.api.nvim_command("w")
 ;;(comment (editor.go-to "core.core-test" 14 0))
 ;;(comment (vim.api.nvim_command "exe w"))
 (defn go-to-line! [buffer-name line]
-  (editor.go-to buffer-name line 1))
+  (edit-buffer! buffer-name)
+  (editor.go-to buffer-name line 1)
+  (go-to-first-char!))
 (comment (go-to-line! (nvim.buf_get_name (nvim.buf.nr)) 249))
+(defn go-to-buffer! [buffer-name buffer-id]
+  (edit-buffer! buffer-name))
 
 (defn go-to-first-readable-char! [buffer-id]
   ;;(nvim_buf_call) ;; not sure how to use this
   (vim.api.nvim_command "call search('[^ \t]')"))
 
 (defn jump! [buffer-and-line-info]
-  (let [buffer-name (a.get buffer-and-line-info :buffer-name)
-        failed-line (a.get buffer-and-line-info :failed-line)]
-    (go-to-line! buffer-name failed-line)
-    ;;(go-to-first-readable-char! buffer-id)
-    ))
+  (let [failed-line (a.get buffer-and-line-info :failed-line)]
+    (if failed-line
+      (go-to-line! (a.get buffer-and-line-info :buffer-name)
+                   failed-line)
+      (do
+        (go-to-buffer! (a.get buffer-and-line-info :buffer-name)
+                       (a.get buffer-and-line-info :buffer-id))))))
 (comment (jump! {:buffer-id 26
                  :buffer-name "/home/user/.config/nvim/fnl/_/core/core_test.clj"
                  :failed-line 10

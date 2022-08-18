@@ -25,6 +25,12 @@
 (defn get-test-ns-name! []
   (to-test-ns-name (get-current-ns!)))
 
+(defn get-alternate-ns-name! []
+  (let [current-ns (get-current-ns!)]
+    (if (text.ends-with current-ns "-test")
+      (string.sub current-ns 1 -6)
+      (.. current-ns "-test"))))
+
 (defn remove-ns! []
   (eval.command "(remove-ns (symbol (str *ns*)))"))
 
@@ -166,6 +172,12 @@
 
 (defn jump-to-first-failing! []
   (jump.jump-to-last-failing-test!))
+
+(defn jump-to-alternate-ns! []
+  (let [to-find (get-alternate-ns-name!)]
+    (->> {:namespace to-find}
+         jump.find-buffer-to-jump!
+         jump.jump-to-buffer-and-line!)))
 
 ;(defn retest! []
 ;  (server.with-conn-and-ops-or-warn
