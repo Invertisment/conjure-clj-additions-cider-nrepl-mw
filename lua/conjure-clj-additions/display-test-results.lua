@@ -64,7 +64,7 @@ _2amodule_2a["display-result"] = display_result
 local function display_loc(ns, suite_sym, line)
   local function _4_()
     if line then
-      return (":" .. line .. " ")
+      return (":" .. line)
     else
       return ""
     end
@@ -75,29 +75,19 @@ _2amodule_2a["display-loc"] = display_loc
 local function display_assertion_text(text)
   if (0 == a.count(text)) then
     return ""
-  elseif "\"" then
-    return text
   else
-    return "\" "
+    return ("\"" .. text .. "\" ")
   end
 end
 _2amodule_2a["display-assertion-text"] = display_assertion_text
 local function display_suite_sym(result_type, ns, suite_sym, line, text)
-  if (0 == a.count(text)) then
-  elseif "\"" then
-  else
-  end
-  if line then
-    return (display_loc(ns, suite_sym, line) .. display_assertion_text(text) .. result_type)
-  else
-    return nil
-  end
+  return (result_type .. " " .. display_loc(ns, suite_sym, line))
 end
 _2amodule_2a["display-suite-sym"] = display_suite_sym
 local function display_suite_result(test_index, suite_result)
   local ns = a.get(suite_result, "ns")
   local suite_sym = a.get(suite_result, "var")
-  return a.concat({"", (a.str(test_index) .. ". " .. display_suite_sym(a.get(suite_result, "type"), ns, suite_sym, a.get(suite_result, "line"), a.get(suite_result, "context")))}, display_result("  Expected:", suite_result, "expected"), display_result("  Actual:", suite_result, "actual"), display_result("  Diff:", suite_result, "diffs"), display_result("  Error:", suite_result, "error"))
+  return a.concat({"", (a.str(test_index) .. ". " .. display_suite_sym(a.get(suite_result, "type"), ns, suite_sym, a.get(suite_result, "line"), a.get(suite_result, "context")))}, {("  " .. display_assertion_text(a.get(suite_result, "context")))}, display_result("  Expected:", suite_result, "expected"), display_result("  Actual:", suite_result, "actual"), display_result("  Diff:", suite_result, "diffs"), display_result("  Error:", suite_result, "error"))
 end
 _2amodule_2a["display-suite-result"] = display_suite_result
 --[[ (display-suite-result 99 (a.second (a.get-in test-result ["utils.my-test" "qwe-test"]))) ]]--
@@ -117,38 +107,38 @@ end
 _2amodule_2a["display-ns-header"] = display_ns_header
 --[[ (display-ns-header "utils.my-test") ]]--
 local function unwrap_suite_results(suite_results)
-  local function _8_(res, suite_result)
+  local function _6_(res, suite_result)
     if pass_3f(suite_result) then
       return res
     else
       return a.concat(res, {suite_result})
     end
   end
-  return a.reduce(_8_, {}, suite_results)
+  return a.reduce(_6_, {}, suite_results)
 end
 _2amodule_2a["unwrap-suite-results"] = unwrap_suite_results
 local function unwrap_ns_result(ns_result)
-  local function _10_(res, suite_symbol)
+  local function _8_(res, suite_symbol)
     return a.concat(res, unwrap_suite_results(a.get(ns_result, suite_symbol)))
   end
-  return a.reduce(_10_, {}, a.keys(ns_result))
+  return a.reduce(_8_, {}, a.keys(ns_result))
 end
 _2amodule_2a["unwrap-ns-result"] = unwrap_ns_result
 local function unwrap(test_result)
-  local function _11_(unwrapped, ns)
+  local function _9_(unwrapped, ns)
     return a.concat(unwrapped, unwrap_ns_result(a.get(test_result, ns)))
   end
-  return a.reduce(_11_, {}, a.keys(test_result))
+  return a.reduce(_9_, {}, a.keys(test_result))
 end
 _2amodule_2a["unwrap"] = unwrap
 --[[ (unwrap test-result) ]]--
 local function unwrapped_results__3eto_lines(unwrapped_results)
-  local function _12_(iv)
+  local function _10_(iv)
     local i = a.first(iv)
     local v = a.second(iv)
     return display_suite_result(i, v)
   end
-  return a.mapcat(a.identity, a["map-indexed"](_12_, unwrapped_results))
+  return a.mapcat(a.identity, a["map-indexed"](_10_, unwrapped_results))
 end
 _2amodule_2a["unwrapped-results->to-lines"] = unwrapped_results__3eto_lines
 local function to_lines(test_result)

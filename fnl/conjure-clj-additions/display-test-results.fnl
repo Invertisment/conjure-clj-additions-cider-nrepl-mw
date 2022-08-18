@@ -69,22 +69,18 @@
 
 (defn display-loc [ns suite-sym line]
   (.. ns "/" suite-sym (if line
-                         (.. ":" line " ")
+                         (.. ":" line)
                          "")))
 
 (defn display-assertion-text [text]
   (if (= 0 (a.count text))
     ""
-    "\"" text "\" "))
+    (.. "\"" text "\" ")))
 
 (defn display-suite-sym [result-type ns suite-sym line text]
-  (if (= 0 (a.count text))
-    ""
-    "\"" text "\" ")
-  (if line
-    (.. (display-loc ns suite-sym line)
-        (display-assertion-text text)
-        result-type)))
+  (.. result-type
+      " "
+      (display-loc ns suite-sym line)))
 
 (defn display-suite-result [test-index suite-result]
   (let [ns (a.get suite-result :ns)
@@ -97,6 +93,7 @@
                               suite-sym
                               (a.get suite-result :line)
                               (a.get suite-result :context)))]
+      [(.. "  " (display-assertion-text (a.get suite-result :context)))]
       (display-result "  Expected:" suite-result :expected)
       (display-result "  Actual:" suite-result :actual)
       (display-result "  Diff:" suite-result :diffs)
