@@ -145,12 +145,6 @@
        :var-query {:ns-query {:exactly [test-ns]}}}
       test-ns)))
 
-(defn run-test-ns-tests! []
-  (let [current-ns (get-current-ns!)]
-    (if (text.ends-with current-ns "-test")
-      (nrepl-action.run-current-ns-tests)
-      (nrepl-action.run-alternate-ns-tests))))
-
 (defn nrepl-run-current-test! []
   (let [form (extract.form {:root? true})]
     (when form
@@ -169,9 +163,6 @@
       (display.unwrapped-results->nth-test vim.v.count1)
       jump.find-buffer-to-jump!
       jump.jump-to-buffer-and-line!))
-
-(defn jump-to-first-failing! []
-  (jump.jump-to-last-failing-test!))
 
 (defn jump-to-alternate-ns! []
   (let [to-find (get-alternate-ns-name!)]

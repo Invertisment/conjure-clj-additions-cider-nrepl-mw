@@ -18,10 +18,6 @@
 (defn on-filetype []
   (provide-fn! :CcaNsJumpToAlternate :conjure-clj-additions-nrepl.additional-fns :jump-to-alternate-ns!)
 
-  ;; log-parsing functions (based on original way Conjure does things on its own)
-  (provide-fn! :CcaRunTestsInTestNs :conjure-clj-additions-nrepl.additional-fns :run-test-ns-tests!)
-  (provide-fn! :CcaJumpToFailingCljTest :conjure-clj-additions-nrepl.additional-fns :jump-to-first-failing!)
-
   ;; nrepl-based functions
   (provide-fn! :CcaNreplLoadTestMiddleware :conjure-clj-additions-nrepl.main :load-test-middleware!)
   (provide-fn! :CcaNreplRunTestsInTestNs :conjure-clj-additions-nrepl.additional-fns :nrepl-middleware-run-test-ns-tests!)

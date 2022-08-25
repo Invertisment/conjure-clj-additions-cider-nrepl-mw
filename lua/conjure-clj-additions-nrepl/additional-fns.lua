@@ -157,15 +157,6 @@ local function nrepl_middleware_run_test_ns_tests_21()
   return nrepl_test_21({op = "test-var-query", ["var-query"] = {["ns-query"] = {exactly = {test_ns}}}}, test_ns)
 end
 _2amodule_2a["nrepl-middleware-run-test-ns-tests!"] = nrepl_middleware_run_test_ns_tests_21
-local function run_test_ns_tests_21()
-  local current_ns = get_current_ns_21()
-  if text["ends-with"](current_ns, "-test") then
-    return nrepl_action["run-current-ns-tests"]()
-  else
-    return nrepl_action["run-alternate-ns-tests"]()
-  end
-end
-_2amodule_2a["run-test-ns-tests!"] = run_test_ns_tests_21
 local function nrepl_run_current_test_21()
   local form = extract.form({["root?"] = true})
   if form then
@@ -186,10 +177,6 @@ local function nrepl_jump_to_nth_failing_21()
   return jump["jump-to-buffer-and-line!"](jump["find-buffer-to-jump!"](display["unwrapped-results->nth-test"](own_state["get-unwrapped-test-results"](), vim.v.count1)))
 end
 _2amodule_2a["nrepl-jump-to-nth-failing!"] = nrepl_jump_to_nth_failing_21
-local function jump_to_first_failing_21()
-  return jump["jump-to-last-failing-test!"]()
-end
-_2amodule_2a["jump-to-first-failing!"] = jump_to_first_failing_21
 local function jump_to_alternate_ns_21()
   local to_find = get_alternate_ns_name_21()
   return jump["jump-to-buffer-and-line!"](jump["find-buffer-to-jump!"]({namespace = to_find}))
