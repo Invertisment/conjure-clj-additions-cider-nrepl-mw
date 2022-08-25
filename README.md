@@ -1,4 +1,4 @@
-## Conjure Clojure additions
+## Conjure Clojure additions (run tests via nREPL)
 
 This plugin activates nREPL test middleware when it's included into the project.
 Then it allows to run tests using nREPL and jump to the first/numbered test.
