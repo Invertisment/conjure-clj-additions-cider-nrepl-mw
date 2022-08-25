@@ -6,11 +6,10 @@ It also provides some convenience functions to interact with current namespace.
 
 To use the fully-vanilla (no test middleware) plugin you may want to look into this plugin: https://github.com/Invertisment/conjure-clj-additions-nrepl-vanilla
 
-Provides two modes to jump to failing test and execute tests (functions have to be mapped manually):
-1. Conjure's original mode -- limited jumping but more basic setup and doesn't require nREPL in your `:dev` deps
+Provides a set of functions to jump to failing test and execute tests (functions have to be mapped manually):
 1. nREPL-based test runner -- no log parsing (instant jump to test) and nicer log output (numbers to jump to, syntax highlighting) but needs nREPL dependency in the project: `https://github.com/clojure-emacs/cider-nrepl/` (personally I added it into my `~/.lein/profiles.clj` file)
 
-Provides these additional helpers:
+Provides these additional functions:
 ```
 :CcaNsCleanup         // Clean current ns (doesn't break the ns that imports current ns)
 :CcaNsRemove          // Run `remove-ns` on the current namespace
@@ -20,7 +19,7 @@ Provides these additional helpers:
 It's based on [Conjure](https://github.com/Olical/conjure/) and requires it to operate (strongly coupled, parses the log output).
 Mostly useful when editing Clojure.
 
-## Run nREPL-based tests
+## nREPL setup
 Requires [nREPL](https://github.com/clojure-emacs/cider-nrepl/) to be added to your `:dependencies`.
 You may want to add it to `.lein/profiles.clj` file so that it would be present in all projects.
 
