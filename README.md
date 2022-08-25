@@ -45,7 +45,7 @@ autocmd FileType clojure nnoremap <silent> <localleader>tc :CcaNreplRunCurrentTe
 "autocmd FileType clojure nnoremap <silent> <localleader>tt :CcaNreplRunCurrentTest<CR>
 ```
 
-The plugin will print the test output and remember the last failed tests (because nREPL middleware does that).
+The plugin will format+print the test output and remember the last failed tests (because nREPL middleware returns test results so it's possible to to it).
 
 `CcaNreplJumpToFailingCljTest` also supports additional functionality to jump to nth test by typing a number before running the function.
 For instance if I bind this function to `<>tf` then I could press `2<>tf` to jump to the second failed test.
