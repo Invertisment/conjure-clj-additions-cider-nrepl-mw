@@ -35,8 +35,14 @@ local function get_current_buffer_21()
   return buffer_details_21(nvim.buf.nr())
 end
 _2amodule_2a["get-current-buffer!"] = get_current_buffer_21
+local function ns__3efilename(ns_name)
+  return (string.gsub(string.gsub(ns_name, "-", "_"), "[.]", "/") .. ".clj")
+end
+_2amodule_2a["ns->filename"] = ns__3efilename
+--[[ (ns->filename "core.core-test") ]]--
+--[[ (ns->filename "core.co-----re-tes-t") ]]--
 local function find_matching_buffer(expected_ns, buffers)
-  local to_find = __fnl_global__ns_2d_3efilename(expected_ns)
+  local to_find = ns__3efilename(expected_ns)
   local function _1_(desc)
     local id = a.get(desc, "buffer-id")
     local name = a.get(desc, "buffer-name")

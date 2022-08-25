@@ -20,6 +20,14 @@
 (defn get-current-buffer! []
   (buffer-details! (nvim.buf.nr)))
 
+(defn ns->filename [ns-name]
+  (-> ns-name
+      (string.gsub "-" "_")
+      (string.gsub "[.]" "/")
+      (.. ".clj")))
+(comment (ns->filename "core.core-test"))
+(comment (ns->filename "core.co-----re-tes-t"))
+
 (defn find-matching-buffer [expected-ns buffers]
   (let [to-find (ns->filename expected-ns)]
     (->> buffers
