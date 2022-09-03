@@ -18,7 +18,7 @@ Provides these additional functions:
 :CcaNsJumpToAlternate // Jumps to `-test` or to regular ns depending on which one you're located in
 ```
 
-It's based on [Conjure](https://github.com/Olical/conjure/) and requires it to operate (strongly coupled, parses the log output).
+It's based on [Conjure](https://github.com/Olical/conjure/) and requires it to operate (strongly coupled, uses various internal functions that are not exposed in an "official" way).
 Mostly useful when editing Clojure.
 
 ## nREPL setup
