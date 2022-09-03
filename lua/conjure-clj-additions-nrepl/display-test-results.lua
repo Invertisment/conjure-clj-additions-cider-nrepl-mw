@@ -52,8 +52,8 @@ local function pprint_str(title, data)
 end
 _2amodule_2a["pprint-str"] = pprint_str
 --[[ (pprint-str "hello: " test-result) ]]--
-local function display_result(text, suite_result, key)
-  local result = a.get(suite_result, key)
+local function display_result(text, suite_result, get_in_keys)
+  local result = a["get-in"](suite_result, get_in_keys)
   if not (0 == a.count(result)) then
     return pprint_str((text .. " "), result)
   else
@@ -87,7 +87,7 @@ _2amodule_2a["display-suite-sym"] = display_suite_sym
 local function display_suite_result(test_index, suite_result)
   local ns = a.get(suite_result, "ns")
   local suite_sym = a.get(suite_result, "var")
-  return a.concat({"", (a.str(test_index) .. ". " .. display_suite_sym(a.get(suite_result, "type"), ns, suite_sym, a.get(suite_result, "line"), a.get(suite_result, "context")))}, {("  " .. display_assertion_text(a.get(suite_result, "context")))}, display_result("  Expected:", suite_result, "expected"), display_result("  Actual:", suite_result, "actual"), display_result("  Diff:", suite_result, "diffs"), display_result("  Error:", suite_result, "error"))
+  return a.concat({"", (a.str(test_index) .. ". " .. display_suite_sym(a.get(suite_result, "type"), ns, suite_sym, a.get(suite_result, "line"), a.get(suite_result, "context")))}, {("  " .. display_assertion_text(a.get(suite_result, "context")))}, display_result("  Expected:", suite_result, {"expected"}), display_result("  Actual:", suite_result, {"actual"}), display_result("  Diff: -", suite_result, {"diffs", 1, 2, 2}), display_result("        +", suite_result, {"diffs", 1, 2, 1}), display_result("  Error:", suite_result, {"error"}))
 end
 _2amodule_2a["display-suite-result"] = display_suite_result
 --[[ (display-suite-result 99 (a.second (a.get-in test-result ["utils.my-test" "qwe-test"]))) ]]--

@@ -62,8 +62,8 @@
                          (str-split "\n"))))
 (comment (pprint-str "hello: " test-result))
 
-(defn display-result [text suite-result key]
-  (let [result (a.get suite-result key)]
+(defn display-result [text suite-result get-in-keys]
+  (let [result (a.get-in suite-result get-in-keys)]
     (when (not (= 0 (a.count result)))
       (pprint-str (.. text " ") result))))
 
@@ -94,10 +94,11 @@
                               (a.get suite-result :line)
                               (a.get suite-result :context)))]
       [(.. "  " (display-assertion-text (a.get suite-result :context)))]
-      (display-result "  Expected:" suite-result :expected)
-      (display-result "  Actual:" suite-result :actual)
-      (display-result "  Diff:" suite-result :diffs)
-      (display-result "  Error:" suite-result :error))))
+      (display-result "  Expected:" suite-result [:expected])
+      (display-result "  Actual:" suite-result [:actual])
+      (display-result "  Diff: -" suite-result [:diffs 1 2 2])
+      (display-result "        +" suite-result [:diffs 1 2 1])
+      (display-result "  Error:" suite-result [:error]))))
 (comment (display-suite-result 99 (a.second (a.get-in test-result [:utils.my-test :qwe-test]))))
 
 (defn pass? [suite-result]
