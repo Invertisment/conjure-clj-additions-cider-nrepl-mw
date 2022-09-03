@@ -1,5 +1,7 @@
 ## Conjure Clojure additions (run tests via nREPL)
 
+Usage example: https://asciinema.org/a/mOpVfgCFCzvZBzANP09BqLBNY
+
 This plugin activates nREPL test middleware when it's included into the project.
 Then it allows to run tests using nREPL and jump to the first/numbered test.
 It also provides some convenience functions to interact with current namespace.
