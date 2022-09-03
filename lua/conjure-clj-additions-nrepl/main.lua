@@ -10,9 +10,8 @@ do
   _2amodule_2a["aniseed/locals"] = {}
   _2amodule_locals_2a = (_2amodule_2a)["aniseed/locals"]
 end
-local bridge, config, fns, load_util, nvim, str = require("conjure.bridge"), require("conjure.config"), require("conjure-clj-additions-nrepl.additional-fns"), require("conjure-clj-additions-nrepl.load-util"), require("conjure.aniseed.nvim"), require("conjure.aniseed.string")
+local bridge, fns, load_util, nvim, str = require("conjure.bridge"), require("conjure-clj-additions-nrepl.additional-fns"), require("conjure-clj-additions-nrepl.load-util"), require("conjure.aniseed.nvim"), require("conjure.aniseed.string")
 do end (_2amodule_locals_2a)["bridge"] = bridge
-_2amodule_locals_2a["config"] = config
 _2amodule_locals_2a["fns"] = fns
 _2amodule_locals_2a["load-util"] = load_util
 _2amodule_locals_2a["nvim"] = nvim

@@ -1,9 +1,5 @@
 (module conjure-clj-additions-nrepl.load-util
-  {require {nvim conjure.aniseed.nvim
-            str conjure.aniseed.string
-            bridge conjure.bridge
-            config conjure.config
-            fns conjure-clj-additions-nrepl.additional-fns}})
+  {require {}})
 
 (defn try-load! [match-filetype retries is-loaded-fn try-load-fn]
   (when (= match-filetype vim.bo.filetype)

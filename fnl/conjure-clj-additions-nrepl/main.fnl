@@ -2,10 +2,8 @@
   {require {nvim conjure.aniseed.nvim
             str conjure.aniseed.string
             bridge conjure.bridge
-            config conjure.config
             fns conjure-clj-additions-nrepl.additional-fns
-            load-util conjure-clj-additions-nrepl.load-util
-            }})
+            load-util conjure-clj-additions-nrepl.load-util}})
 
 (defn provide-fn! [fn-name ns f]
   (nvim.ex.command_

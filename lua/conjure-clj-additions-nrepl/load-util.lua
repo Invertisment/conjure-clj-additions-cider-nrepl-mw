@@ -10,12 +10,6 @@ do
   _2amodule_2a["aniseed/locals"] = {}
   _2amodule_locals_2a = (_2amodule_2a)["aniseed/locals"]
 end
-local bridge, config, fns, nvim, str = require("conjure.bridge"), require("conjure.config"), require("conjure-clj-additions-nrepl.additional-fns"), require("conjure.aniseed.nvim"), require("conjure.aniseed.string")
-do end (_2amodule_locals_2a)["bridge"] = bridge
-_2amodule_locals_2a["config"] = config
-_2amodule_locals_2a["fns"] = fns
-_2amodule_locals_2a["nvim"] = nvim
-_2amodule_locals_2a["str"] = str
 local function try_load_21(match_filetype, retries, is_loaded_fn, try_load_fn)
   if (match_filetype == vim.bo.filetype) then
     local i = 0
