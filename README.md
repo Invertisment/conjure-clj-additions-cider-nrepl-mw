@@ -6,7 +6,7 @@ This plugin activates nREPL test middleware when it's included into the project.
 Then it allows to run tests using nREPL and jump to the first/numbered test.
 It also provides some convenience functions to interact with current namespace.
 
-To use the fully-vanilla (no test middleware) plugin you may want to look into this plugin: https://github.com/Invertisment/conjure-clj-additions-nrepl-vanilla
+To use the fully-vanilla (no test middleware) plugin you may want to look into this plugin: https://github.com/Invertisment/conjure-clj-additions-vanilla
 
 Provides a set of functions to jump to failing test and execute tests (functions have to be mapped manually):
 1. nREPL-based test runner -- no log parsing (instant jump to test) and nicer log output (numbers to jump to, syntax highlighting) but needs nREPL dependency in the project: `https://github.com/clojure-emacs/cider-nrepl/` (personally I added it into my `~/.lein/profiles.clj` file)
