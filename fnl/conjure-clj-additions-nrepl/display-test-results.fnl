@@ -96,8 +96,8 @@
       [(.. "  " (display-assertion-text (a.get suite-result :context)))]
       (display-result "  Expected:" suite-result [:expected])
       (display-result "  Actual:" suite-result [:actual])
-      (display-result "  Diff: -" suite-result [:diffs 1 2 2])
-      (display-result "        +" suite-result [:diffs 1 2 1])
+      (display-result "  Diff: -" suite-result [:diffs 1 2 1])
+      (display-result "        +" suite-result [:diffs 1 2 2])
       (display-result "  Error:" suite-result [:error]))))
 (comment (display-suite-result 99 (a.second (a.get-in test-result [:utils.my-test :qwe-test]))))
 
