@@ -128,7 +128,7 @@ end
 _2amodule_2a["test-resp->text-groups"] = test_resp__3etext_groups
 local function nrepl_test_21(test_selector, printable_info)
   nvim.echo("...")
-  log.append({("; Running tests in " .. printable_info)}, {["break?"] = true, ["suppress-hud?"] = true})
+  log.append({("; Running tests in " .. printable_info)}, {["break?"] = true})
   local function _10_(conn, ops)
     local function _11_(response)
       local results = a.get(response, "results")
@@ -138,7 +138,7 @@ local function nrepl_test_21(test_selector, printable_info)
         local lines = display["unwrapped-results->to-lines"](unwrapped_results)
         if (0 == a.count(lines)) then
           print_colored_21(test_resp__3etext_groups(response, {{{"summary", "pass"}, txt_green, " tests passed"}}))
-          return log.append({"; Tests passed"}, {["suppress-hud?"] = true})
+          return log.append({"; Tests passed"}, {})
         else
           print_colored_21(test_resp__3etext_groups(response, {{{"summary", "error"}, txt_red, " errors"}, {{"summary", "fail"}, txt_yellow, " failures"}}))
           return log.append(lines, {["break?"] = true})

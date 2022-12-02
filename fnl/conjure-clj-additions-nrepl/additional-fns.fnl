@@ -113,7 +113,8 @@
   (nvim.echo "...")
   (log.append [(.. "; Running tests in " printable-info)]
               {:break? true
-               :suppress-hud? true})
+               ;:suppress-hud? true
+               })
   (server.with-conn-and-ops-or-warn
     [:test :test-var-query]
     (fn [conn ops]
@@ -130,7 +131,8 @@
                       (print-colored! (test-resp->text-groups
                                         response
                                         [[[:summary :pass]  txt-green  " tests passed"]]))
-                      (log.append ["; Tests passed"] {:suppress-hud? true}))
+                      (log.append ["; Tests passed"] {;;:suppress-hud? true
+                                                      }))
                     (do
                       (print-colored! (test-resp->text-groups
                                         response
