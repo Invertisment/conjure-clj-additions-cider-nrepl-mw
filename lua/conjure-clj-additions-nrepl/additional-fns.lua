@@ -83,6 +83,15 @@ local function print_colored_21(text_groups)
   return vim.api.nvim_echo(text_groups, false, {})
 end
 _2amodule_2a["print-colored!"] = print_colored_21
+local function println_into_console_21(text_groups, print_opts)
+  local function _8_(_6_)
+    local _arg_7_ = _6_
+    local text0 = _arg_7_[1]
+    return text0
+  end
+  return log.append({("; " .. str.join("", a.map(_8_, text_groups)))}, print_opts)
+end
+_2amodule_2a["println-into-console!"] = println_into_console_21
 local function txt_green(text0)
   return {text0, "DiffAdded"}
 end
@@ -100,22 +109,23 @@ local function txt_normal(text0)
 end
 _2amodule_2a["txt-normal"] = txt_normal
 local function join_prints(sep_chunk, print_chunks)
-  local function _6_(chunk)
+  local function _9_(chunk)
     return {chunk, sep_chunk}
   end
-  return a.butlast(a.mapcat(_6_, print_chunks))
+  return a.butlast(a.mapcat(_9_, print_chunks))
 end
 _2amodule_2a["join-prints"] = join_prints
 local function pos_3f(n)
   return (n > 0)
 end
 _2amodule_2a["pos?"] = pos_3f
-local function test_resp__3etext_groups(response, descriptions)
-  local function _7_(desc)
-    local _let_8_ = desc
-    local loc = _let_8_[1]
-    local color_fn = _let_8_[2]
-    local txt_postfix = _let_8_[3]
+local function test_resp__3etext_groups(response, descriptions, fallback_txt)
+  local results
+  local function _10_(desc)
+    local _let_11_ = desc
+    local loc = _let_11_[1]
+    local color_fn = _let_11_[2]
+    local txt_postfix = _let_11_[3]
     local value = a["get-in"](response, loc)
     if pos_3f(value) then
       return color_fn((value .. txt_postfix))
@@ -123,33 +133,39 @@ local function test_resp__3etext_groups(response, descriptions)
       return nil
     end
   end
-  return join_prints(txt_normal(" "), a.map(_7_, descriptions))
+  results = join_prints(txt_normal(" "), a.map(_10_, descriptions))
+  if a["empty?"](results) then
+    return {{fallback_txt}}
+  else
+    return results
+  end
 end
 _2amodule_2a["test-resp->text-groups"] = test_resp__3etext_groups
 local function nrepl_test_21(test_selector, printable_info)
   nvim.echo("...")
   log.append({("; Running tests in " .. printable_info)}, {["break?"] = true})
-  local function _10_(conn, ops)
-    local function _11_(response)
+  local function _14_(conn, ops)
+    local function _15_(response)
       local results = a.get(response, "results")
       local unwrapped_results = display.unwrap(results)
       if results then
         own_state["put-unwrapped-test-results!"](unwrapped_results)
         local lines = display["unwrapped-results->to-lines"](unwrapped_results)
         if (0 == a.count(lines)) then
-          print_colored_21(test_resp__3etext_groups(response, {{{"summary", "pass"}, txt_green, " tests passed"}}))
-          return log.append({"; Tests passed"}, {})
+          local text_groups = test_resp__3etext_groups(response, {{{"summary", "pass"}, txt_green, " tests passed"}}, "No tests for this namespace (did they load into REPL?)")
+          print_colored_21(text_groups)
+          return println_into_console_21(text_groups, {})
         else
-          print_colored_21(test_resp__3etext_groups(response, {{{"summary", "error"}, txt_red, " errors"}, {{"summary", "fail"}, txt_yellow, " failures"}}))
+          print_colored_21(test_resp__3etext_groups(response, {{{"summary", "error"}, txt_red, " errors"}, {{"summary", "fail"}, txt_yellow, " failures"}}, "No test failures"))
           return log.append(lines, {["break?"] = true})
         end
       else
         return nil
       end
     end
-    return server.send(a.assoc(test_selector, "session", conn.session), _11_)
+    return server.send(a.assoc(test_selector, "session", conn.session), _15_)
   end
-  return server["with-conn-and-ops-or-warn"]({"test", "test-var-query"}, _10_)
+  return server["with-conn-and-ops-or-warn"]({"test", "test-var-query"}, _14_)
 end
 _2amodule_2a["nrepl-test!"] = nrepl_test_21
 local function nrepl_middleware_run_test_ns_tests_21()

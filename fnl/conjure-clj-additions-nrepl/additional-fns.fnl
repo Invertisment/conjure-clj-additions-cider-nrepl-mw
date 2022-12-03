@@ -77,6 +77,13 @@
 (defn print-colored! [text-groups]
   (vim.api.nvim_echo text-groups false {}))
 
+(defn println-into-console! [text-groups print-opts]
+  (log.append [(.. "; "
+                   (->> text-groups
+                        (a.map (fn [[text]]
+                                 text))
+                        (str.join "")))] print-opts))
+
 (defn txt-green  [text] [text "DiffAdded"])
 (defn txt-red    [text] [text "DiffRemoved"])
 (defn txt-yellow [text] [text "diffFile"])
@@ -91,25 +98,39 @@
 (defn pos? [n]
   (> n 0))
 
-(defn test-resp->text-groups [response descriptions]
-  (->> descriptions
-       (a.map (fn [desc]
-                (let [[loc color-fn txt-postfix] desc
-                      value (a.get-in response loc)]
-                  (when (pos? value) (color-fn (.. value txt-postfix))))))
-       (join-prints (txt-normal " "))))
+(defn test-resp->text-groups [response descriptions fallback-txt]
+  (let [results (->> descriptions
+                     (a.map (fn [desc]
+                              (let [[loc color-fn txt-postfix] desc
+                                    value (a.get-in response loc)]
+                                (when (pos? value)
+                                  (color-fn (.. value txt-postfix))))))
+                     (join-prints (txt-normal " ")))]
+    (if (a.empty? results)
+      [[fallback-txt]]
+      results)))
+
 ;(comment (test-resp->text-groups {:resp {:fail 10 :error 2}}
-;           [[[:resp :fail]  txt-yellow " errors"]
-;            [[:resp :error] txt-red    " failures"]]))
+;                                 [[[:resp :fail]  txt-yellow " errors"]
+;                                  [[:resp :error] txt-red    " failures"]])
+;         "fallback")
 ;(comment (test-resp->text-groups
 ;           {:resp {:fail 0 :error 2}}
 ;           [[[:resp :fail]  txt-yellow " errors"]
-;            [[:resp :error] txt-red    " failures"]]))
+;            [[:resp :error] txt-red    " failures"]])
+;         "fallback")
 ;(comment (test-resp->text-groups
 ;           {:resp {:fail 0 :error 2 :pass 5}}
-;           [[[:resp :pass]  txt-green  " tests passed"]]))
+;           [[[:resp :pass]  txt-green  " tests passed"]])
+;         "fallback")
+;(comment (test-resp->text-groups
+;           {:resp {:fail 0 :error 2 :pass 0}}
+;           [[[:resp :pass]  txt-green  " tests passed"]]
+;           "fallback"))
 
 (defn nrepl-test! [test-selector printable-info]
+  ;; TODO: Conjure should support nonexistent NS callback
+  ;; so that this could be cleared up when namespace isn't loaded.
   (nvim.echo "...")
   (log.append [(.. "; Running tests in " printable-info)]
               {:break? true
@@ -127,17 +148,19 @@
                 (own-state.put-unwrapped-test-results! unwrapped-results)
                 (let [lines (display.unwrapped-results->to-lines unwrapped-results)]
                   (if (= 0 (a.count lines))
-                    (do
-                      (print-colored! (test-resp->text-groups
+                    (let [text-groups (test-resp->text-groups
                                         response
-                                        [[[:summary :pass]  txt-green  " tests passed"]]))
-                      (log.append ["; Tests passed"] {;;:suppress-hud? true
-                                                      }))
+                                        [[[:summary :pass]  txt-green  " tests passed"]]
+                                        "No tests for this namespace (did they load into REPL?)")]
+                      (print-colored! text-groups)
+                      (println-into-console! text-groups {;;:suppress-hud? true
+                                                          }))
                     (do
                       (print-colored! (test-resp->text-groups
                                         response
                                         [[[:summary :error] txt-red    " errors"]
-                                         [[:summary :fail]  txt-yellow " failures"]]))
+                                         [[:summary :fail]  txt-yellow " failures"]]
+                                        "No test failures"))
                       (log.append lines {:break? true}))))))))))))
 
 (defn nrepl-middleware-run-test-ns-tests! []
