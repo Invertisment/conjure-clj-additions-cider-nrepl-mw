@@ -128,9 +128,9 @@
 ;           [[[:resp :pass]  txt-green  " tests passed"]]
 ;           "fallback"))
 
-(defn nrepl-test! [test-selector printable-info]
+(defn nrepl-test! [test-selector ns-name]
   (nvim.echo "...")
-  (log.append [(.. "; Running tests in " printable-info)]
+  (log.append [(.. "; Running tests in " ns-name)]
               {:break? true
                ;:suppress-hud? true
                })
@@ -141,7 +141,7 @@
         (a.assoc test-selector :session conn.session)
         (fn [response]
           (if (a.get-in response [:status :namespace-not-found])
-            (print-colored! [[(.. printable-info " is not loaded")]])
+            (print-colored! [[(.. "Not loaded: " ns-name)]])
             (let [results (a.get response :results)
                   unwrapped-results (display.unwrap results)]
               (when results
@@ -151,7 +151,7 @@
                     (let [text-groups (test-resp->text-groups
                                         response
                                         [[[:summary :pass]  txt-green  " tests passed"]]
-                                        (.. printable-info " has no loaded tests"))]
+                                        (.. "No loaded tests in " ns-name))]
                       (print-colored! text-groups)
                       (println-into-console! text-groups {;;:suppress-hud? true
                                                           }))

@@ -141,13 +141,13 @@ local function test_resp__3etext_groups(response, descriptions, fallback_txt)
   end
 end
 _2amodule_2a["test-resp->text-groups"] = test_resp__3etext_groups
-local function nrepl_test_21(test_selector, printable_info)
+local function nrepl_test_21(test_selector, ns_name)
   nvim.echo("...")
-  log.append({("; Running tests in " .. printable_info)}, {["break?"] = true})
+  log.append({("; Running tests in " .. ns_name)}, {["break?"] = true})
   local function _14_(conn, ops)
     local function _15_(response)
       if a["get-in"](response, {"status", "namespace-not-found"}) then
-        return print_colored_21({{(printable_info .. " is not loaded")}})
+        return print_colored_21({{("Not loaded: " .. ns_name)}})
       else
         local results = a.get(response, "results")
         local unwrapped_results = display.unwrap(results)
@@ -155,7 +155,7 @@ local function nrepl_test_21(test_selector, printable_info)
           own_state["put-unwrapped-test-results!"](unwrapped_results)
           local lines = display["unwrapped-results->to-lines"](unwrapped_results)
           if (0 == a.count(lines)) then
-            local text_groups = test_resp__3etext_groups(response, {{{"summary", "pass"}, txt_green, " tests passed"}}, (printable_info .. " has no loaded tests"))
+            local text_groups = test_resp__3etext_groups(response, {{{"summary", "pass"}, txt_green, " tests passed"}}, ("No loaded tests in " .. ns_name))
             print_colored_21(text_groups)
             return println_into_console_21(text_groups, {})
           else
