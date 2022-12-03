@@ -146,21 +146,25 @@ local function nrepl_test_21(test_selector, printable_info)
   log.append({("; Running tests in " .. printable_info)}, {["break?"] = true})
   local function _14_(conn, ops)
     local function _15_(response)
-      local results = a.get(response, "results")
-      local unwrapped_results = display.unwrap(results)
-      if results then
-        own_state["put-unwrapped-test-results!"](unwrapped_results)
-        local lines = display["unwrapped-results->to-lines"](unwrapped_results)
-        if (0 == a.count(lines)) then
-          local text_groups = test_resp__3etext_groups(response, {{{"summary", "pass"}, txt_green, " tests passed"}}, "No tests for this namespace (did they load into REPL?)")
-          print_colored_21(text_groups)
-          return println_into_console_21(text_groups, {})
-        else
-          print_colored_21(test_resp__3etext_groups(response, {{{"summary", "error"}, txt_red, " errors"}, {{"summary", "fail"}, txt_yellow, " failures"}}, "No test failures"))
-          return log.append(lines, {["break?"] = true})
-        end
+      if a["get-in"](response, {"status", "namespace-not-found"}) then
+        return print_colored_21({{(printable_info .. " is not loaded")}})
       else
-        return nil
+        local results = a.get(response, "results")
+        local unwrapped_results = display.unwrap(results)
+        if results then
+          own_state["put-unwrapped-test-results!"](unwrapped_results)
+          local lines = display["unwrapped-results->to-lines"](unwrapped_results)
+          if (0 == a.count(lines)) then
+            local text_groups = test_resp__3etext_groups(response, {{{"summary", "pass"}, txt_green, " tests passed"}}, (printable_info .. " has no loaded tests"))
+            print_colored_21(text_groups)
+            return println_into_console_21(text_groups, {})
+          else
+            print_colored_21(test_resp__3etext_groups(response, {{{"summary", "error"}, txt_red, " errors"}, {{"summary", "fail"}, txt_yellow, " failures"}}, "No test failures"))
+            return log.append(lines, {["break?"] = true})
+          end
+        else
+          return nil
+        end
       end
     end
     return server.send(a.assoc(test_selector, "session", conn.session), _15_)

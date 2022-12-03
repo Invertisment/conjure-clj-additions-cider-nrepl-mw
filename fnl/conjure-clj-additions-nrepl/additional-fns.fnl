@@ -129,8 +129,6 @@
 ;           "fallback"))
 
 (defn nrepl-test! [test-selector printable-info]
-  ;; TODO: Conjure should support nonexistent NS callback
-  ;; so that this could be cleared up when namespace isn't loaded.
   (nvim.echo "...")
   (log.append [(.. "; Running tests in " printable-info)]
               {:break? true
@@ -142,8 +140,10 @@
       (server.send
         (a.assoc test-selector :session conn.session)
         (fn [response]
-          (let [results (a.get response :results)]
-            (let [unwrapped-results (display.unwrap results)]
+          (if (a.get-in response [:status :namespace-not-found])
+            (print-colored! [[(.. printable-info " is not loaded")]])
+            (let [results (a.get response :results)
+                  unwrapped-results (display.unwrap results)]
               (when results
                 (own-state.put-unwrapped-test-results! unwrapped-results)
                 (let [lines (display.unwrapped-results->to-lines unwrapped-results)]
@@ -151,7 +151,7 @@
                     (let [text-groups (test-resp->text-groups
                                         response
                                         [[[:summary :pass]  txt-green  " tests passed"]]
-                                        "No tests for this namespace (did they load into REPL?)")]
+                                        (.. printable-info " has no loaded tests"))]
                       (print-colored! text-groups)
                       (println-into-console! text-groups {;;:suppress-hud? true
                                                           }))
