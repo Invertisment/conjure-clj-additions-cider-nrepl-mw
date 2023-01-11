@@ -58,11 +58,50 @@ local function cleanup_ns_21()
   return eval.command(("((fn clenaup-ns [ns-sym]" .. "  (when-let [ns (find-ns ns-sym)]" .. "    (run! #(try (ns-unalias ns %) (catch Throwable _)) (keys (ns-aliases ns)))" .. "    (run! #(try (ns-unmap ns %)   (catch Throwable _)) (keys (ns-interns ns)))" .. "    (->> (ns-refers ns)" .. "         (remove (fn [[_ v]] (.startsWith (str v) \"#'clojure.core/\")))" .. "         (map key)" .. "         (run! #(try (ns-unmap ns %) (catch Throwable _))))))" .. "   (symbol (str *ns*)))"))
 end
 _2amodule_2a["cleanup-ns!"] = cleanup_ns_21
+local function get_current_form_content_21()
+  return a.get(extract.form({}), "content")
+end
+_2amodule_2a["get-current-form-content!"] = get_current_form_content_21
+local function criterium_quick_bench_21()
+  return eval.command(("(do" .. "  (try" .. "    (when-let [add-libs (requiring-resolve 'clojure.tools.deps.alpha.repl/add-libs)]" .. "      (add-libs {'criterium {:mvn/version \"0.4.6\"}}))" .. "    (catch Exception _ignored))" .. "  (require 'criterium.core)" .. "  (criterium.core/quick-bench " .. get_current_form_content_21() .. "))"))
+end
+_2amodule_2a["criterium-quick-bench!"] = criterium_quick_bench_21
+local function clj_async_profile_21()
+  return eval.command(("(do" .. "  (try" .. "    (when-let [add-libs (requiring-resolve 'clojure.tools.deps.alpha.repl/add-libs)]" .. "      (add-libs {'com.clojure-goes-fast/clj-async-profiler {:mvn/version \"1.0.3\"}}))" .. "    (catch Exception _ignored))" .. "  (require 'clj-async-profiler.core)" .. "  (clj-async-profiler.core/profile " .. get_current_form_content_21() .. "))"))
+end
+_2amodule_2a["clj-async-profile!"] = clj_async_profile_21
+local function shell_exec_21(cmd)
+  local _3_, _4_ = io.popen(cmd)
+  if (nil ~= _3_) then
+    local f = _3_
+    local s = f:read("*all")
+    f:close()
+    return {s, nil}
+  elseif ((_3_ == nil) and (nil ~= _4_)) then
+    local err_msg = _4_
+    return print(("Error:" .. err_msg))
+  else
+    return nil
+  end
+end
+_2amodule_2a["shell-exec!"] = shell_exec_21
+local function clj_async_profile_open_result_dir_21()
+  return shell_exec_21(((vim.g.conjure_clj_additions_file_browser or "`which open 2>/dev/null || which xdg-open 2>/dev/null`") .. " " .. "\"file:///tmp/clj-async-profiler/results\" 2>&1 1>/dev/null"))
+end
+_2amodule_2a["clj-async-profile-open-result-dir!"] = clj_async_profile_open_result_dir_21
+local function clj_java_decompile_class_21()
+  return eval.command(("(do" .. "  (try" .. "    (when-let [add-libs (requiring-resolve 'clojure.tools.deps.alpha.repl/add-libs)]" .. "      (add-libs" .. "       {'com.clojure-goes-fast/clj-java-decompiler {:mvn/version \"0.3.3\"}}))" .. "    (catch Exception _ignored))" .. "  (require 'clj-java-decompiler.core)" .. "  (clj-java-decompiler.core/decompile " .. get_current_form_content_21() .. "))"))
+end
+_2amodule_2a["clj-java-decompile-class!"] = clj_java_decompile_class_21
+local function clj_java_disasm_class_21()
+  return eval.command(("(do" .. "  (try" .. "    (when-let [add-libs (requiring-resolve 'clojure.tools.deps.alpha.repl/add-libs)]" .. "      (add-libs" .. "       {'com.clojure-goes-fast/clj-java-decompiler {:mvn/version \"0.3.3\"}}))" .. "    (catch Exception _ignored))" .. "  (require 'clj-java-decompiler.core)" .. "  (clj-java-decompiler.core/disassemble " .. get_current_form_content_21() .. "))"))
+end
+_2amodule_2a["clj-java-disasm-class!"] = clj_java_disasm_class_21
 local function capture_describe_21()
-  local function _3_(msg)
+  local function _6_(msg)
     return a.assoc(state.get("conn"), "describe", msg)
   end
-  return server.send({op = "describe"}, _3_)
+  return server.send({op = "describe"}, _6_)
 end
 _2amodule_locals_2a["capture-describe!"] = capture_describe_21
 local function nrepl_middleware_present_3f()
@@ -70,13 +109,13 @@ local function nrepl_middleware_present_3f()
 end
 _2amodule_2a["nrepl-middleware-present?"] = nrepl_middleware_present_3f
 local function load_test_middleware_21()
-  local function _4_(conn, ops)
-    local function _5_(_add_middleware_result)
+  local function _7_(conn, ops)
+    local function _8_(_add_middleware_result)
       return capture_describe_21()
     end
-    return server.send({op = "add-middleware", session = conn.session, middleware = {"cider.nrepl/wrap-test"}}, _5_)
+    return server.send({op = "add-middleware", session = conn.session, middleware = {"cider.nrepl/wrap-test"}}, _8_)
   end
-  return server["with-conn-and-ops-or-warn"]({"add-middleware"}, _4_)
+  return server["with-conn-and-ops-or-warn"]({"add-middleware"}, _7_)
 end
 _2amodule_2a["load-test-middleware!"] = load_test_middleware_21
 local function print_colored_21(text_groups)
@@ -84,12 +123,12 @@ local function print_colored_21(text_groups)
 end
 _2amodule_2a["print-colored!"] = print_colored_21
 local function println_into_console_21(text_groups, print_opts)
-  local function _8_(_6_)
-    local _arg_7_ = _6_
-    local text0 = _arg_7_[1]
+  local function _11_(_9_)
+    local _arg_10_ = _9_
+    local text0 = _arg_10_[1]
     return text0
   end
-  return log.append({("; " .. str.join("", a.map(_8_, text_groups)))}, print_opts)
+  return log.append({("; " .. str.join("", a.map(_11_, text_groups)))}, print_opts)
 end
 _2amodule_2a["println-into-console!"] = println_into_console_21
 local function txt_green(text0)
@@ -109,10 +148,10 @@ local function txt_normal(text0)
 end
 _2amodule_2a["txt-normal"] = txt_normal
 local function join_prints(sep_chunk, print_chunks)
-  local function _9_(chunk)
+  local function _12_(chunk)
     return {chunk, sep_chunk}
   end
-  return a.butlast(a.mapcat(_9_, print_chunks))
+  return a.butlast(a.mapcat(_12_, print_chunks))
 end
 _2amodule_2a["join-prints"] = join_prints
 local function pos_3f(n)
@@ -121,11 +160,11 @@ end
 _2amodule_2a["pos?"] = pos_3f
 local function test_resp__3etext_groups(response, descriptions, fallback_txt)
   local results
-  local function _10_(desc)
-    local _let_11_ = desc
-    local loc = _let_11_[1]
-    local color_fn = _let_11_[2]
-    local txt_postfix = _let_11_[3]
+  local function _13_(desc)
+    local _let_14_ = desc
+    local loc = _let_14_[1]
+    local color_fn = _let_14_[2]
+    local txt_postfix = _let_14_[3]
     local value = a["get-in"](response, loc)
     if pos_3f(value) then
       return color_fn((value .. txt_postfix))
@@ -133,7 +172,7 @@ local function test_resp__3etext_groups(response, descriptions, fallback_txt)
       return nil
     end
   end
-  results = join_prints(txt_normal(" "), a.map(_10_, descriptions))
+  results = join_prints(txt_normal(" "), a.map(_13_, descriptions))
   if a["empty?"](results) then
     return {{fallback_txt}}
   else
@@ -144,8 +183,8 @@ _2amodule_2a["test-resp->text-groups"] = test_resp__3etext_groups
 local function nrepl_test_21(test_selector, ns_name)
   nvim.echo("...")
   log.append({("; Running tests in " .. ns_name)}, {["break?"] = true})
-  local function _14_(conn, ops)
-    local function _15_(response)
+  local function _17_(conn, ops)
+    local function _18_(response)
       if a["get-in"](response, {"status", "namespace-not-found"}) then
         return print_colored_21({{("Not loaded: " .. ns_name)}})
       else
@@ -167,9 +206,9 @@ local function nrepl_test_21(test_selector, ns_name)
         end
       end
     end
-    return server.send(a.assoc(test_selector, "session", conn.session), _15_)
+    return server.send(a.assoc(test_selector, "session", conn.session), _18_)
   end
-  return server["with-conn-and-ops-or-warn"]({"test", "test-var-query"}, _14_)
+  return server["with-conn-and-ops-or-warn"]({"test", "test-var-query"}, _17_)
 end
 _2amodule_2a["nrepl-test!"] = nrepl_test_21
 local function nrepl_middleware_run_test_ns_tests_21()

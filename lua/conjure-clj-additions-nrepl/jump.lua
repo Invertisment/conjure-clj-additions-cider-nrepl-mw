@@ -20,17 +20,17 @@ local function buffer_details_21(buf_id)
   return {["buffer-id"] = buf_id, ["buffer-name"] = nvim.buf_get_name(buf_id)}
 end
 _2amodule_2a["buffer-details!"] = buffer_details_21
---[[ (nvim.buf_get_name 0) ]]--
+--[[ (nvim.buf_get_name 0) ]]
 local function get_buffers_21()
   return a.map(buffer_details_21, vim.api.nvim_list_bufs())
 end
 _2amodule_2a["get-buffers!"] = get_buffers_21
---[[ (get-buffers!) ]]--
+--[[ (get-buffers!) ]]
 --[[ (def sample-buffers [{:buffer-id 1 :buffer-name "/home/_/.config/nvim/fnl/_/core.fnl"}
  {:buffer-id 3
   :buffer-name "/home/_/.config/nvim/fnl/_/conjure-log-683854.fnl"}
  {:buffer-id 131 :buffer-name "test/clj/core/core_test.clj"}
- {:buffer-id 13 :buffer-name "/home/_/.config/nvim/fnl/_/core.core-test"}]) ]]--
+ {:buffer-id 13 :buffer-name "/home/_/.config/nvim/fnl/_/core.core-test"}]) ]]
 local function get_current_buffer_21()
   return buffer_details_21(nvim.buf.nr())
 end
@@ -39,8 +39,8 @@ local function ns__3efilename(ns_name)
   return (string.gsub(string.gsub(ns_name, "-", "_"), "[.]", "/") .. ".clj")
 end
 _2amodule_2a["ns->filename"] = ns__3efilename
---[[ (ns->filename "core.core-test") ]]--
---[[ (ns->filename "core.co-----re-tes-t") ]]--
+--[[ (ns->filename "core.core-test") ]]
+--[[ (ns->filename "core.co-----re-tes-t") ]]
 local function find_matching_buffer(expected_ns, buffers)
   local to_find = ns__3efilename(expected_ns)
   local function _1_(desc)
@@ -51,9 +51,9 @@ local function find_matching_buffer(expected_ns, buffers)
   return a.first(a.filter(_1_, buffers))
 end
 _2amodule_2a["find-matching-buffer"] = find_matching_buffer
---[[ (find-matching-buffer "core.core-test" sample-buffers) ]]--
---[[ (find-matching-buffer "core.core-test2" sample-buffers) ]]--
---[[ (find-matching-buffer "core.core-test" (get-buffers!)) ]]--
+--[[ (find-matching-buffer "core.core-test" sample-buffers) ]]
+--[[ (find-matching-buffer "core.core-test2" sample-buffers) ]]
+--[[ (find-matching-buffer "core.core-test" (get-buffers!)) ]]
 local function find_buffer_to_jump_21(buf_info)
   local failing_namespace = a.get(buf_info, "namespace")
   local failing_line = a.get(buf_info, "failed-line")
@@ -91,7 +91,7 @@ local function go_to_line_21(buffer_name, line)
   return go_to_first_char_21()
 end
 _2amodule_2a["go-to-line!"] = go_to_line_21
---[[ (go-to-line! (nvim.buf_get_name (nvim.buf.nr)) 249) ]]--
+--[[ (go-to-line! (nvim.buf_get_name (nvim.buf.nr)) 249) ]]
 local function go_to_buffer_21(buffer_name, buffer_id)
   return edit_buffer_21(buffer_name)
 end
@@ -109,12 +109,12 @@ _2amodule_2a["jump!"] = jump_21
  :buffer-name "/home/user/.config/nvim/fnl/_/core/core_test.clj"
  :failed-line 10
  :namespace "core.core-test"
- :suite-name "my-failing-testsuite"}) ]]--
+ :suite-name "my-failing-testsuite"}) ]]
 --[[ (jump! {:buffer-id 1
  :buffer-name "/home/user/.config/nvim/fnl/_/core.fnl"
  :failed-line 270
  :namespace "core.core-test"
- :suite-name "my-failing-testsuite"}) ]]--
+ :suite-name "my-failing-testsuite"}) ]]
 local function jump_to_buffer_and_line_21(to_jump)
   if to_jump then
     return jump_21(to_jump)

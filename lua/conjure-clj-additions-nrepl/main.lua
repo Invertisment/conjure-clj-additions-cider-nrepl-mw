@@ -32,6 +32,11 @@ local function on_filetype()
   provide_fn_21("CcaNreplJumpToFailingCljTest", "conjure-clj-additions-nrepl.additional-fns", "nrepl-jump-to-nth-failing!")
   provide_fn_21("CcaNsRemove", "conjure-clj-additions-nrepl.additional-fns", "remove-ns!")
   provide_fn_21("CcaNsCleanup", "conjure-clj-additions-nrepl.additional-fns", "cleanup-ns!")
+  provide_fn_21("CcaFormBench", "conjure-clj-additions-nrepl.additional-fns", "criterium-quick-bench!")
+  provide_fn_21("CcaFormClass", "conjure-clj-additions-nrepl.additional-fns", "clj-java-decompile-class!")
+  provide_fn_21("CcaFormDisasssemble", "conjure-clj-additions-nrepl.additional-fns", "clj-java-disasm-class!")
+  provide_fn_21("CcaFormFlame", "conjure-clj-additions-nrepl.additional-fns", "clj-async-profile!")
+  provide_fn_21("CcaFormFlameResults", "conjure-clj-additions-nrepl.additional-fns", "clj-async-profile-open-result-dir!")
   return load_test_middleware_21()
 end
 _2amodule_2a["on-filetype"] = on_filetype

@@ -50,6 +50,71 @@
       "         (run! #(try (ns-unmap ns %) (catch Throwable _))))))"
       "   (symbol (str *ns*)))")))
 
+(defn get-current-form-content! []
+  (a.get (extract.form {}) :content))
+
+(defn criterium-quick-bench! []
+  ;; Source: https://github.com/jpmonettas/elisp-utils/blob/master/clojure.el
+  (eval.command
+    (.. "(do"
+        "  (try"
+        "    (when-let [add-libs (requiring-resolve 'clojure.tools.deps.alpha.repl/add-libs)]"
+        "      (add-libs {'criterium {:mvn/version \"0.4.6\"}}))"
+        "    (catch Exception _ignored))"
+        "  (require 'criterium.core)"
+        "  (criterium.core/quick-bench " (get-current-form-content!) "))")))
+
+(defn clj-async-profile! []
+  ;; Source: https://github.com/jpmonettas/elisp-utils/blob/master/clojure.el
+  (eval.command
+    (.. "(do"
+        "  (try"
+        "    (when-let [add-libs (requiring-resolve 'clojure.tools.deps.alpha.repl/add-libs)]"
+        "      (add-libs {'com.clojure-goes-fast/clj-async-profiler {:mvn/version \"1.0.3\"}}))"
+        "    (catch Exception _ignored))"
+        "  (require 'clj-async-profiler.core)"
+        "  (clj-async-profiler.core/profile " (get-current-form-content!) "))")))
+
+(defn shell-exec! [cmd]
+  (match (io.popen cmd)
+    f (do
+        (let [s (f:read :*all)]
+          (f:close)
+          [s nil]))
+    (nil err-msg) (print (.. "Error:" err-msg))))
+
+(defn clj-async-profile-open-result-dir! []
+  ;; Source: https://github.com/jpmonettas/elisp-utils/blob/master/clojure.el
+  (shell-exec!
+    (.. (or vim.g.conjure_clj_additions_file_browser "`which open 2>/dev/null || which xdg-open 2>/dev/null`")
+        " "
+        "\"file:///tmp/clj-async-profiler/results\" 2>&1 1>/dev/null")))
+
+(defn clj-java-decompile-class! []
+  ;; Source: https://github.com/jpmonettas/elisp-utils/blob/master/clojure.el
+  (eval.command
+    (.. "(do"
+        "  (try"
+        "    (when-let [add-libs (requiring-resolve 'clojure.tools.deps.alpha.repl/add-libs)]"
+        "      (add-libs"
+        "       {'com.clojure-goes-fast/clj-java-decompiler {:mvn/version \"0.3.3\"}}))"
+        "    (catch Exception _ignored))"
+        "  (require 'clj-java-decompiler.core)"
+        "  (clj-java-decompiler.core/decompile " (get-current-form-content!) "))")))
+
+
+(defn clj-java-disasm-class! []
+  ;; Source: https://github.com/jpmonettas/elisp-utils/blob/master/clojure.el
+  (eval.command
+    (.. "(do"
+        "  (try"
+        "    (when-let [add-libs (requiring-resolve 'clojure.tools.deps.alpha.repl/add-libs)]"
+        "      (add-libs"
+        "       {'com.clojure-goes-fast/clj-java-decompiler {:mvn/version \"0.3.3\"}}))"
+        "    (catch Exception _ignored))"
+        "  (require 'clj-java-decompiler.core)"
+        "  (clj-java-decompiler.core/disassemble " (get-current-form-content!) "))")))
+
 ;; https://github.com/Olical/conjure/blob/2e7f449d06753f2996e186954e96afc60edd5862/fnl/conjure/client/clojure/nrepl/server.fnl#L213
 (defn- capture-describe! []
   (server.send

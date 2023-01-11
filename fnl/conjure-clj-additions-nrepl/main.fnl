@@ -24,8 +24,13 @@
   ;todo (provide-fn! :ConjureAdditionsRunTestsRetest :conjure-clj-additions-nrepl.additional-fns :retest!)
 
   ;; util
-  (provide-fn! :CcaNsRemove :conjure-clj-additions-nrepl.additional-fns :remove-ns!)
-  (provide-fn! :CcaNsCleanup :conjure-clj-additions-nrepl.additional-fns :cleanup-ns!)
+  (provide-fn! :CcaNsRemove         :conjure-clj-additions-nrepl.additional-fns :remove-ns!)
+  (provide-fn! :CcaNsCleanup        :conjure-clj-additions-nrepl.additional-fns :cleanup-ns!)
+  (provide-fn! :CcaFormBench        :conjure-clj-additions-nrepl.additional-fns :criterium-quick-bench!)
+  (provide-fn! :CcaFormClass        :conjure-clj-additions-nrepl.additional-fns :clj-java-decompile-class!)
+  (provide-fn! :CcaFormDisasssemble :conjure-clj-additions-nrepl.additional-fns :clj-java-disasm-class!)
+  (provide-fn! :CcaFormFlame        :conjure-clj-additions-nrepl.additional-fns :clj-async-profile!)
+  (provide-fn! :CcaFormFlameResults :conjure-clj-additions-nrepl.additional-fns :clj-async-profile-open-result-dir!)
 
   (load-test-middleware!))
 

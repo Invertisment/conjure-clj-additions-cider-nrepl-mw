@@ -56,3 +56,17 @@ Test jump ordering is 1-based and not 0-based.
 
 When switching REPL then the old test result will be left in the cache and the jump-to-test could be wrong.
 It's possible it may not rehook the test middleware as well and to do it manually execute `:CcaNreplLoadTestMiddleware`.
+
+## Flamegraphs, Criterium and other things
+
+Flamegraph will output into a temporary directory under `file:///tmp/clj-async-profiler/results`.
+Call `:CcaFormFlameResults` to open that directory using command in `g:conjure_clj_additions_file_browser`.
+
+```
+let g:conjure_clj_additions_file_browser = 'firefox'
+autocmd FileType clojure nnoremap <silent> <localleader>fb :CcaFormBench<CR>
+autocmd FileType clojure nnoremap <silent> <localleader>fc :CcaFormClass<CR>
+autocmd FileType clojure nnoremap <silent> <localleader>fd :CcaFormDisasssemble<CR>
+autocmd FileType clojure nnoremap <silent> <localleader>ff :CcaFormFlame<CR>
+autocmd FileType clojure nnoremap <silent> <localleader>fF :CcaFormFlameResults<CR>
+```

@@ -22,16 +22,16 @@ local function iter_to_arr(iter)
   return arr
 end
 _2amodule_2a["iter-to-arr"] = iter_to_arr
---[[ (iter-to-arr (string.gmatch "hhhiahihihahihihiaa" "[^a]+")) ]]--
+--[[ (iter-to-arr (string.gmatch "hhhiahihihahihihiaa" "[^a]+")) ]]
 local function str_split(s, char)
   return iter_to_arr(string.gmatch(s, ("[^" .. char .. "]+")))
 end
 _2amodule_2a["str-split"] = str_split
---[[ (str-split "hello" "l") ]]--
+--[[ (str-split "hello" "l") ]]
 --[[ (str-split "hel
 l
 o" "
-") ]]--
+") ]]
 local function prefix_with_title(title, strings)
   if (0 == a.count(strings)) then
     return {}
@@ -45,13 +45,13 @@ local function prefix_with_title(title, strings)
   end
 end
 _2amodule_2a["prefix-with-title"] = prefix_with_title
---[[ (prefix-with-title "hello" {}) ]]--
---[[ (prefix-with-title "hello" ["a" "b" "c"]) ]]--
+--[[ (prefix-with-title "hello" {}) ]]
+--[[ (prefix-with-title "hello" ["a" "b" "c"]) ]]
 local function pprint_str(title, data)
   return prefix_with_title(title, str_split(string.gsub(a.str(data), "[\13\n]\"", "\""), "\n"))
 end
 _2amodule_2a["pprint-str"] = pprint_str
---[[ (pprint-str "hello: " test-result) ]]--
+--[[ (pprint-str "hello: " test-result) ]]
 local function display_result(text, suite_result, get_in_keys)
   local result = a["get-in"](suite_result, get_in_keys)
   if not (0 == a.count(result)) then
@@ -90,22 +90,22 @@ local function display_suite_result(test_index, suite_result)
   return a.concat({"", (a.str(test_index) .. ". " .. display_suite_sym(a.get(suite_result, "type"), ns, suite_sym, a.get(suite_result, "line"), a.get(suite_result, "context")))}, {("  " .. display_assertion_text(a.get(suite_result, "context")))}, display_result("  Expected:", suite_result, {"expected"}), display_result("  Actual:", suite_result, {"actual"}), display_result("  Diff: -", suite_result, {"diffs", 1, 2, 1}), display_result("        +", suite_result, {"diffs", 1, 2, 2}), display_result("  Error:", suite_result, {"error"}))
 end
 _2amodule_2a["display-suite-result"] = display_suite_result
---[[ (display-suite-result 99 (a.second (a.get-in test-result ["utils.my-test" "qwe-test"]))) ]]--
+--[[ (display-suite-result 99 (a.second (a.get-in test-result ["utils.my-test" "qwe-test"]))) ]]
 local function pass_3f(suite_result)
   return ("pass" == a.get(suite_result, "type"))
 end
 _2amodule_2a["pass?"] = pass_3f
---[[ (pass? (a.first (a.get-in test-result ["utils.my-test" "qwe-test"]))) 0 ]]--
+--[[ (pass? (a.first (a.get-in test-result ["utils.my-test" "qwe-test"]))) 0 ]]
 local function display_suite_header(suite_symbol)
   return ("  Suite: " .. suite_symbol)
 end
 _2amodule_2a["display-suite-header"] = display_suite_header
---[[ (display-suite-header "qwe-test") ]]--
+--[[ (display-suite-header "qwe-test") ]]
 local function display_ns_header(ns)
   return ("  Namespace: " .. ns)
 end
 _2amodule_2a["display-ns-header"] = display_ns_header
---[[ (display-ns-header "utils.my-test") ]]--
+--[[ (display-ns-header "utils.my-test") ]]
 local function unwrap_suite_results(suite_results)
   local function _6_(res, suite_result)
     if pass_3f(suite_result) then
@@ -131,7 +131,7 @@ local function unwrap(test_result)
   return a.reduce(_9_, {}, a.keys(test_result))
 end
 _2amodule_2a["unwrap"] = unwrap
---[[ (unwrap test-result) ]]--
+--[[ (unwrap test-result) ]]
 local function unwrapped_results__3eto_lines(unwrapped_results)
   local function _10_(iv)
     local i = a.first(iv)
@@ -145,12 +145,12 @@ local function to_lines(test_result)
   return unwrapped_results__3eto_lines(unwrap(test_result))
 end
 _2amodule_2a["to-lines"] = to_lines
---[[ (to-lines test-result) ]]--
+--[[ (to-lines test-result) ]]
 local function first_value(map)
   return a.get(map, a.first(a.keys(map)))
 end
 _2amodule_2a["first-value"] = first_value
---[[ (first-value (first-value test-result)) ]]--
+--[[ (first-value (first-value test-result)) ]]
 local function unwrapped_results__3enth_test(unwrapped_results, n)
   local nth_error = a.get(unwrapped_results, n)
   if nth_error then
@@ -162,11 +162,11 @@ local function unwrapped_results__3enth_test(unwrapped_results, n)
   end
 end
 _2amodule_2a["unwrapped-results->nth-test"] = unwrapped_results__3enth_test
---[[ (unwrapped-results->nth-test (unwrap test-result) 1) ]]--
---[[ (unwrapped-results->nth-test (unwrap test-result) 2) ]]--
+--[[ (unwrapped-results->nth-test (unwrap test-result) 1) ]]
+--[[ (unwrapped-results->nth-test (unwrap test-result) 2) ]]
 local function first_failing_test(test_result)
   return unwrapped_results__3enth_test(unwrap(test_result), 1)
 end
 _2amodule_2a["first-failing-test"] = first_failing_test
---[[ (first-failing-test test-result) ]]--
+--[[ (first-failing-test test-result) ]]
 return _2amodule_2a
